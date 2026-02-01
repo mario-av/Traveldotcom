@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Review Model - Represents user reviews for vacations.
@@ -67,5 +68,25 @@ class Review extends Model
     public function vacation(): BelongsTo
     {
         return $this->belongsTo(Vacation::class, 'vacation_id');
+    }
+
+    /**
+     * Get the history of edits for this review.
+     *
+     * @return HasMany
+     */
+    public function histories(): HasMany
+    {
+        return $this->hasMany(ReviewHistory::class)->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Check if this review is editable (within the 10-minute window).
+     *
+     * @return bool
+     */
+    public function isEditable(): bool
+    {
+        return \App\Custom\SentComments::isComment($this->id);
     }
 }

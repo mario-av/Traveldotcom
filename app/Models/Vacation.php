@@ -117,4 +117,19 @@ class Vacation extends Model
     {
         return $this->hasMany(Review::class, 'vacation_id');
     }
+    /**
+     * Get the count of approved reviews.
+     */
+    public function getReviewsCountAttribute(): int
+    {
+        return $this->reviews()->where('approved', true)->count();
+    }
+
+    /**
+     * Get the average rating of approved reviews.
+     */
+    public function getAverageRatingAttribute(): float
+    {
+        return (float) $this->reviews()->where('approved', true)->avg('rating') ?? 0.0;
+    }
 }

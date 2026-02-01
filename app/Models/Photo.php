@@ -56,4 +56,18 @@ class Photo extends Model
     {
         return $this->belongsTo(Vacation::class, 'vacation_id');
     }
+    /**
+     * Get the full URL of the photo.
+     * Centralizes logic for external URLs (Seeds) vs Local Storage (Uploads).
+     *
+     * @return string
+     */
+    public function getUrlAttribute(): string
+    {
+        if (filter_var($this->path, FILTER_VALIDATE_URL) || str_starts_with($this->path, 'http')) {
+            return $this->path;
+        }
+
+        return url('storage/' . $this->path);
+    }
 }

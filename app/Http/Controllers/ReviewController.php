@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Custom\SentComments;
+use App\Http\Requests\ReviewCreateRequest;
+use App\Http\Requests\ReviewEditRequest;
 use App\Models\Review;
 use App\Models\Vacation;
 use Illuminate\Database\QueryException;
@@ -39,25 +41,36 @@ class ReviewController extends Controller
     }
 
     /**
+     * Display a listing of all reviews (admin only).
+     *
+     * @return View The reviews management view.
+     */
+    public function index(): View
+    {
+        $reviews = Review::with(['user', 'vacation', 'histories'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        return view('admin.review.index', compact('reviews'));
+    }
+
+    /**
      * Store a newly created review in storage.
      *
      * @param Request $request The incoming request with review data.
      * @return RedirectResponse Redirect to vacation page.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(ReviewCreateRequest $request): RedirectResponse
     {
         $result = false;
-
-        $validated = $request->validate([
-            'vacation_id' => 'required|exists:vacations,id',
-            'content' => 'required|string|min:10|max:1000',
-            'rating' => 'required|integer|min:1|max:5',
-        ]);
-
+        $validated = $request->validated();
         $vacation = Vacation::find($validated['vacation_id']);
 
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
         // Check if user has booked this vacation
-        if (!Auth::user()->hasBookedVacation($vacation->id)) {
+        if (!$user->hasBookedVacation($vacation->id)) {
             return back()->withErrors(['general' => 'You must have booked this vacation to leave a review.']);
         }
 
@@ -73,15 +86,15 @@ class ReviewController extends Controller
         $review = new Review();
         $review->user_id = Auth::user()->id;
         $review->vacation_id = $vacation->id;
-        $review->content = $validated['content'];
+        $review->content = $validated['comment'];
         $review->rating = $validated['rating'];
         $review->approved = false;
 
         try {
             $result = $review->save();
-
-            // Register for temporary edit
-            SentComments::addComment($review->id);
+            if ($result) {
+                SentComments::addComment($review->id);
+            }
 
             $message = 'Review submitted. It will appear after approval.';
         } catch (QueryException $e) {
@@ -107,15 +120,8 @@ class ReviewController extends Controller
      */
     public function edit(Review $review): RedirectResponse|View
     {
-        if (!$this->ownerControl($review)) {
-            return redirect()->route('main.index');
-        }
-
-        // Check edit time limit using SentComments
-        if (!SentComments::isComment($review->id)) {
-            return redirect()
-                ->route('vacation.show', $review->vacation_id)
-                ->withErrors(['general' => 'Edit time limit exceeded. Reviews can only be edited within 10 minutes.']);
+        if (!$this->ownerControl($review) || !$review->isEditable()) {
+            return redirect()->route('main.index')->withErrors(['general' => 'You can no longer edit this review.']);
         }
 
         return view('review.edit', compact('review'));
@@ -128,27 +134,24 @@ class ReviewController extends Controller
      * @param Review $review The review to update.
      * @return RedirectResponse Redirect to vacation page.
      */
-    public function update(Request $request, Review $review): RedirectResponse
+    public function update(ReviewEditRequest $request, Review $review): RedirectResponse
     {
-        if (!$this->ownerControl($review)) {
-            return redirect()->route('main.index');
-        }
-
-        // Check edit time limit using SentComments
-        if (!SentComments::isComment($review->id)) {
-            return back()->withErrors(['general' => 'Edit time limit exceeded.']);
+        if (!$this->ownerControl($review) || !$review->isEditable()) {
+            return redirect()->route('main.index')->withErrors(['general' => 'You can no longer edit this review.']);
         }
 
         $result = false;
-
-        $validated = $request->validate([
-            'content' => 'required|string|min:10|max:1000',
-            'rating' => 'required|integer|min:1|max:5',
-        ]);
+        $validated = $request->validated();
 
         try {
+            // Save current version to history
+            $review->histories()->create([
+                'content' => $review->content,
+                'rating' => $review->rating,
+            ]);
+
             $result = $review->update([
-                'content' => $validated['content'],
+                'content' => $validated['comment'],
                 'rating' => $validated['rating'],
                 'approved' => false, // Re-require approval after edit
             ]);
@@ -160,6 +163,9 @@ class ReviewController extends Controller
         $messageArray = ['general' => $message];
 
         if ($result) {
+            if (Auth::user()->rol === 'admin') {
+                return redirect()->route('admin.review.index')->with($messageArray);
+            }
             return redirect()->route('vacation.show', $review->vacation_id)->with($messageArray);
         } else {
             return back()->withInput()->withErrors($messageArray);
@@ -181,9 +187,6 @@ class ReviewController extends Controller
         try {
             $vacationId = $review->vacation_id;
             $result = $review->delete();
-
-            // Remove from edit registry
-            SentComments::removeComment($review->id);
 
             $message = 'Review deleted successfully.';
         } catch (\Exception $e) {

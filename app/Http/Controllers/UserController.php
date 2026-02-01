@@ -193,4 +193,57 @@ class UserController extends Controller
                 ->with('error', 'Error deleting users: ' . $e->getMessage());
         }
     }
+    /**
+     * Verify a user's email address manually.
+     *
+     * @param User $user The user to verify.
+     * @return RedirectResponse
+     */
+    public function verifyEmail(User $user): RedirectResponse
+    {
+        try {
+            $user->markEmailAsVerified();
+
+            return redirect()
+                ->route('user.index')
+                ->with('success', "Email for {$user->name} has been verified.");
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Error verifying email: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Update a user's role.
+     *
+     * @param Request $request
+     * @param User $user
+     * @return RedirectResponse
+     */
+    public function updateRole(Request $request, User $user): RedirectResponse
+    {
+        $validated = $request->validate([
+            'rol' => 'required|in:normal,advanced,admin',
+        ]);
+
+        try {
+            // Prevent changing own role (safety measure)
+            if ($user->id === auth()->id() && $validated['rol'] !== 'admin') {
+                return redirect()
+                    ->back()
+                    ->with('error', 'You cannot downgrade your own role.');
+            }
+
+            $user->update(['rol' => $validated['rol']]);
+
+            return redirect()
+                ->route('user.index')
+                ->with('success', "Role for {$user->name} updated to " . ucfirst($validated['rol']));
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Error updating role: ' . $e->getMessage());
+        }
+    }
 }

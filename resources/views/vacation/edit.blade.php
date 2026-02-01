@@ -109,18 +109,31 @@
                     @if($vacation->photos->count() > 0)
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Current Photos</label>
-                        <div class="grid grid-cols-4 gap-4">
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                             @foreach($vacation->photos as $photo)
-                            <div class="relative group">
-                                <img src="{{ url('storage/' . $photo->path) }}" alt="Photo" class="w-full h-24 object-cover rounded-lg">
-                                <label class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition">
-                                    <input type="checkbox" name="delete_photos[]" value="{{ $photo->id }}" class="hidden">
-                                    <i class="bi bi-x text-sm"></i>
+                            <div class="photo-container relative group border-2 border-transparent rounded-lg overflow-hidden transition-all duration-300" id="photo-{{ $photo->id }}">
+                                <img src="{{ $photo->url }}" alt="Photo" class="photo-img w-full h-32 object-cover">
+
+                                {{-- Delete Toggle --}}
+                                <label class="absolute top-2 right-2 cursor-pointer z-10" title="Delete photo">
+                                    <input type="checkbox" name="delete_photos[]" value="{{ $photo->id }}"
+                                        class="hidden delete-checkbox"
+                                        onchange="togglePhotoMark({{ $photo->id }})">
+                                    <div class="delete-btn bg-white/90 hover:bg-white text-gray-600 hover:text-red-600 rounded-full w-8 h-8 flex items-center justify-center shadow-md transition-colors">
+                                        <i class="bi bi-trash"></i>
+                                    </div>
                                 </label>
+
+                                {{-- Mark for deletion overlay --}}
+                                <div class="deletion-overlay absolute inset-0 bg-red-600/20 opacity-0 pointer-events-none transition-opacity flex items-center justify-center">
+                                    <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Marked for Deletion</span>
+                                </div>
                             </div>
                             @endforeach
                         </div>
-                        <p class="text-sm text-gray-500 mt-1">Click X to mark photos for deletion</p>
+                        <p class="text-sm text-gray-500 mt-2 italic">
+                            <i class="bi bi-info-circle me-1"></i>Photos marked with red will be removed when you save.
+                        </p>
                     </div>
                     @endif
 
@@ -163,4 +176,38 @@
         </div>
     </div>
 </div>
+@section('scripts')
+<style>
+    .photo-container.is-deleted {
+        border-color: #dc2626 !important;
+    }
+
+    .photo-container.is-deleted .photo-img {
+        opacity: 0.3;
+        filter: grayscale(1);
+    }
+
+    .photo-container.is-deleted .deletion-overlay {
+        opacity: 1;
+    }
+
+    .photo-container.is-deleted .delete-btn {
+        background-color: #dc2626 !important;
+        color: white !important;
+    }
+</style>
+
+<script>
+    function togglePhotoMark(id) {
+        const container = document.getElementById('photo-' + id);
+        const checkbox = container.querySelector('.delete-checkbox');
+
+        if (checkbox.checked) {
+            container.classList.add('is-deleted');
+        } else {
+            container.classList.remove('is-deleted');
+        }
+    }
+</script>
+@endsection
 @endsection

@@ -28,19 +28,19 @@ class HomeController extends Controller
      *
      * @return View The dashboard view.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        return view('auth.home');
+        return view('auth.home', ['tab' => $request->query('tab', 'overview')]);
     }
 
     /**
-     * Show the profile edit form.
+     * Show the profile edit form (Redirect to dashboard settings).
      *
-     * @return View The profile edit view.
+     * @return View The dashboard view with settings tab.
      */
     public function edit(): View
     {
-        return view('auth.edit');
+        return view('auth.home', ['tab' => 'settings']);
     }
 
     /**
@@ -58,6 +58,8 @@ class HomeController extends Controller
             'email' => 'required|max:255|email|unique:users,email,' . $user->id,
             'name' => 'required|max:255',
             'password' => 'nullable|min:8|confirmed',
+            'accent_color' => 'nullable|string|in:rose,indigo,emerald,amber,violet,cyan,slate,tangerine',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
 
         $messages = [
@@ -91,6 +93,17 @@ class HomeController extends Controller
             $user->password = Hash::make($request->password);
         }
 
+        if ($request->hasFile('profile_photo')) {
+            $path = $request->file('profile_photo')->store('profiles', 'public');
+            $user->profile_photo_path = $path;
+        }
+
+        if ($request->has('accent_color')) {
+            $user->accent_color = $request->accent_color;
+            session(['accent_color' => $request->accent_color]);
+        }
+
+        /** @var \App\Models\User $user */
         try {
             $user->save();
             $message = 'Profile updated successfully.';

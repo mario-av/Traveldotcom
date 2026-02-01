@@ -46,6 +46,11 @@ class BookingController extends Controller
      */
     public function store(Request $request, Vacation $vacation): RedirectResponse
     {
+        // If vacation is not injected (missing route param), find it from request
+        if (!$vacation->exists) {
+            $vacation = Vacation::findOrFail($request->vacation_id);
+        }
+
         $validated = $request->validate([
             'num_guests' => 'required|integer|min:1|max:10',
             'notes' => 'nullable|string|max:500',
@@ -69,14 +74,14 @@ class BookingController extends Controller
                 'num_guests' => $validated['num_guests'],
                 'total_price' => $totalPrice,
                 'status' => 'pending',
-                'notes' => $validated['notes'],
+                'notes' => $validated['notes'] ?? null,
             ]);
 
             // Update available slots
             $vacation->decrement('available_slots', $validated['num_guests']);
 
             return redirect()
-                ->route('booking.index')
+                ->route('home')
                 ->with('success', 'Booking created successfully. Please wait for confirmation.');
         } catch (\Exception $e) {
             return redirect()
@@ -129,7 +134,7 @@ class BookingController extends Controller
             $booking->update(['status' => 'cancelled']);
 
             return redirect()
-                ->route('booking.index')
+                ->route('home')
                 ->with('success', 'Booking cancelled successfully.');
         } catch (\Exception $e) {
             return redirect()

@@ -56,7 +56,7 @@ class LoginController extends Controller
      * Log the user out.
      *
      * @param Request $request The incoming request.
-     * @return RedirectResponse Redirect to landing page.
+     * @return RedirectResponse Redirect to main index.
      */
     public function logout(Request $request): RedirectResponse
     {
@@ -66,7 +66,7 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()
-            ->route('landing')
+            ->route('main.index')
             ->with('success', 'You have been logged out.');
     }
 }

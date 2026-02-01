@@ -133,7 +133,7 @@ class CategoryController extends Controller
         $messageArray = ['general' => $message];
 
         if ($result) {
-            return redirect()->route('category.edit', $category->id)->with($messageArray);
+            return redirect()->route('category.index')->with($messageArray);
         } else {
             return back()->withInput()->withErrors($messageArray);
         }

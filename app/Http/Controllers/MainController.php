@@ -7,80 +7,120 @@ use App\Models\Vacation;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-/**
- * MainController - Handles the public landing page.
- * Provides search, filter, and sorting functionality for vacations.
- */
 class MainController extends Controller
 {
     /**
-     * Display the landing page with vacation listings.
+     * Display a listing of vacations with filters, sorting, and pagination.
      *
-     * @param Request $request The incoming request with optional filters.
-     * @return View The vacation index view.
+     * @param Request $request
+     * @return View
      */
     public function index(Request $request): View
     {
-        try {
-            $query = Vacation::query()
-                ->where('active', true)
-                ->with(['category', 'photos' => function ($q) {
-                    $q->where('is_main', true);
-                }]);
+        // 1. CLEAN INPUTS
+        $field = $this->cleanField($request->field);
+        $order = $this->cleanOrder($request->order);
+        $q = $request->q;
+        $category_id = $request->category_id;
+        $active = true; // Use active field instead of active() method
+        $priceMin = $this->cleanNumbers($request->priceMin);
+        $priceMax = $this->cleanNumbers($request->priceMax);
 
-            // Search by title or location
-            if ($request->filled('search')) {
-                $search = $request->input('search');
-                $query->where(function ($q) use ($search) {
-                    $q->where('title', 'like', "%{$search}%")
-                        ->orWhere('location', 'like', "%{$search}%");
-                });
-            }
+        // 2. BASE QUERY
+        // Using with('category') for eager loading
+        $query = Vacation::query()->with('category');
 
-            // Filter by category
-            if ($request->filled('category')) {
-                $query->where('category_id', $request->input('category'));
-            }
+        // Show only active vacations (assuming there's an 'active' column as per migration)
+        $query->where('active', true);
 
-            // Filter by price range
-            if ($request->filled('min_price')) {
-                $query->where('price', '>=', $request->input('min_price'));
-            }
-            if ($request->filled('max_price')) {
-                $query->where('price', '<=', $request->input('max_price'));
-            }
-
-            // Filter featured only
-            if ($request->boolean('featured')) {
-                $query->where('featured', true);
-            }
-
-            // Sorting
-            $sortField = $request->input('sort', 'created_at');
-            $sortDirection = $request->input('direction', 'desc');
-            $allowedSorts = ['price', 'title', 'created_at', 'start_date'];
-
-            if (in_array($sortField, $allowedSorts)) {
-                $query->orderBy($sortField, $sortDirection === 'asc' ? 'asc' : 'desc');
-            }
-
-            // Paginate results
-            $vacations = $query->paginate(12)->withQueryString();
-            $categories = Category::all();
-            $featuredVacations = Vacation::where('active', true)
-                ->where('featured', true)
-                ->with(['photos' => fn($q) => $q->where('is_main', true)])
-                ->take(4)
-                ->get();
-
-            return view('vacation.index', compact('vacations', 'categories', 'featuredVacations'));
-        } catch (\Exception $e) {
-            return view('vacation.index', [
-                'vacations' => collect(),
-                'categories' => collect(),
-                'featuredVacations' => collect(),
-                'error' => 'An error occurred while loading vacations. Please try again later.'
-            ]);
+        // 3. CONDITIONAL FILTERS
+        if ($priceMin != null) {
+            $query->where('price', '>=', $priceMin);
         }
+        if ($priceMax != null) {
+            $query->where('price', '<=', $priceMax);
+        }
+        if ($category_id != null) {
+            $query->where('category_id', '=', $category_id);
+        }
+
+        // 4. SEARCH (title, description, location, category name)
+        if ($q != null) {
+            $query->where(function ($sq) use ($q) {
+                $sq->where('title', 'like', '%' . $q . '%')
+                    ->orWhere('description', 'like', '%' . $q . '%')
+                    ->orWhere('location', 'like', '%' . $q . '%')
+                    ->orWhereHas('category', function ($catQ) use ($q) {
+                        $catQ->where('name', 'like', '%' . $q . '%');
+                    });
+            });
+        }
+
+        // 5. SORTING
+        if (!$request->has('field')) {
+            $query->orderBy('featured', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->orderBy('title', 'asc');
+        } else {
+            $sortingField = $this->getOrderBy($field);
+            $query->orderBy($sortingField, $order);
+        }
+
+        // 6. PAGINATION
+        $vacations = $query->paginate(9)->withQueryString();
+
+        // 7. DATA FOR FILTERS
+        // Pluck returns an array [id => name], using Category model
+        $categories = Category::pluck('name', 'id')->all();
+
+        return view('main.index', [
+            'vacations' => $vacations,
+            'field' => $field,
+            'priceMin' => $priceMin,
+            'categories' => $categories,
+            'priceMax' => $priceMax,
+            'category_id' => $category_id,
+            'order' => $order,
+            'q' => $q,
+        ]);
+    }
+
+    private function getOrderBy($orderRequest): string
+    {
+        $array = [
+            'recent' => 'created_at',
+            'title' => 'title',
+            'price' => 'price',
+            'location' => 'location'
+        ];
+        // Default to created_at if key not found (though cleanField should handle valid keys)
+        return $array[$orderRequest] ?? 'created_at';
+    }
+
+    private function cleanField($field): string
+    {
+        return $this->cleanInput($field, ['recent', 'title', 'price', 'location']);
+    }
+
+    private function cleanOrder($order): string
+    {
+        return $this->cleanInput($order, ['desc', 'asc']);
+    }
+
+    private function cleanInput($input, array $array): string
+    {
+        $value = $array[0]; // Default value
+        if (in_array($input, $array)) {
+            $value = $input;
+        }
+        return $value;
+    }
+
+    private function cleanNumbers($number): mixed
+    {
+        if (is_numeric($number)) {
+            return $number;
+        }
+        return null;
     }
 }

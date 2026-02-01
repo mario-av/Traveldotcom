@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\AdvancedMiddleware;
+use App\Http\Requests\VacationCreateRequest;
+use App\Http\Requests\VacationEditRequest;
 use App\Models\Category;
 use App\Models\Photo;
 use App\Models\Vacation;
@@ -79,28 +81,13 @@ class VacationController extends Controller
      * @param Request $request The incoming request with vacation data.
      * @return RedirectResponse Redirect to vacation show page.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(VacationCreateRequest $request): RedirectResponse
     {
         $result = false;
-
-        $validated = $request->validate([
-            'title' => 'required|string|min:4|max:200',
-            'description' => 'required|string|min:10',
-            'location' => 'required|string|min:2|max:150',
-            'price' => 'required|numeric|min:0',
-            'duration_days' => 'required|integer|min:1',
-            'available_slots' => 'required|integer|min:0',
-            'start_date' => 'required|date|after:today',
-            'end_date' => 'required|date|after:start_date',
-            'category_id' => 'required|exists:categories,id',
-            'featured' => 'boolean',
-            'photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        $vacation = new Vacation($validated);
+        $vacation = new Vacation($request->validated());
         $vacation->user_id = Auth::user()->id;
         $vacation->featured = $request->boolean('featured');
-        $vacation->active = true;
+        $vacation->active = $request->boolean('active', true);
 
         try {
             $result = $vacation->save();
@@ -148,7 +135,13 @@ class VacationController extends Controller
             'category',
             'user',
             'photos',
-            'reviews' => fn($q) => $q->where('approved', true)->with('user'),
+            'reviews' => function ($q) {
+                $q->where('approved', true);
+                if (Auth::check()) {
+                    $q->orWhere('user_id', Auth::id());
+                }
+                $q->with('user');
+            },
         ]);
 
         return view('vacation.show', compact('vacation'));
@@ -163,7 +156,7 @@ class VacationController extends Controller
     public function edit(Vacation $vacation): RedirectResponse|View
     {
         if (!$this->ownerControl($vacation)) {
-            return redirect()->route('landing');
+            return redirect()->route('main.index');
         }
 
         $categories = Category::all();
@@ -178,34 +171,33 @@ class VacationController extends Controller
      * @param Vacation $vacation The vacation to update.
      * @return RedirectResponse Redirect to vacation show page.
      */
-    public function update(Request $request, Vacation $vacation): RedirectResponse
+    public function update(VacationEditRequest $request, Vacation $vacation): RedirectResponse
     {
         if (!$this->ownerControl($vacation)) {
-            return redirect()->route('landing');
+            return redirect()->route('main.index');
         }
 
         $result = false;
 
-        $validated = $request->validate([
-            'title' => 'required|string|min:4|max:200',
-            'description' => 'required|string|min:10',
-            'location' => 'required|string|min:2|max:150',
-            'price' => 'required|numeric|min:0',
-            'duration_days' => 'required|integer|min:1',
-            'available_slots' => 'required|integer|min:0',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'category_id' => 'required|exists:categories,id',
-            'featured' => 'boolean',
-            'active' => 'boolean',
-            'photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
         try {
+            $validated = $request->validated();
             $validated['featured'] = $request->boolean('featured');
             $validated['active'] = $request->boolean('active', true);
 
             $result = $vacation->update($validated);
+
+            // Handle photo deletions
+            if ($request->has('delete_photos')) {
+                foreach ($request->input('delete_photos') as $photoId) {
+                    $photo = Photo::find($photoId);
+                    if ($photo && $photo->vacation_id === $vacation->id) {
+                        // Delete from storage
+                        Storage::disk('public')->delete($photo->path);
+                        // Delete from database
+                        $photo->delete();
+                    }
+                }
+            }
 
             // Handle new photo uploads
             if ($request->hasFile('photos')) {
@@ -230,7 +222,7 @@ class VacationController extends Controller
         $messageArray = ['general' => $message];
 
         if ($result) {
-            return redirect()->route('vacation.edit', $vacation->id)->with($messageArray);
+            return redirect()->route('vacation.index')->with($messageArray);
         } else {
             return back()->withInput()->withErrors($messageArray);
         }
@@ -245,7 +237,7 @@ class VacationController extends Controller
     public function destroy(Vacation $vacation): RedirectResponse
     {
         if (!$this->ownerControl($vacation)) {
-            return redirect()->route('landing');
+            return redirect()->route('main.index');
         }
 
         try {
@@ -264,9 +256,42 @@ class VacationController extends Controller
         $messageArray = ['general' => $message];
 
         if ($result) {
-            return redirect()->route('admin.vacation.index')->with($messageArray);
+            return redirect()->route('vacation.index')->with($messageArray);
         } else {
             return back()->withInput()->withErrors($messageArray);
         }
+    }
+
+    /**
+     * Delete multiple vacations at once.
+     *
+     * @param Request $request The request with IDs to delete.
+     * @return RedirectResponse Redirect to vacation index.
+     */
+    public function deleteGroup(Request $request): RedirectResponse
+    {
+        $ids = $request->input('ids', []);
+
+        if (empty($ids)) {
+            return back()->withErrors(['general' => 'No se seleccionó ningún elemento.']);
+        }
+
+        try {
+            // Delete photos from storage first
+            $vacations = Vacation::whereIn('id', $ids)->with('photos')->get();
+            foreach ($vacations as $vacation) {
+                foreach ($vacation->photos as $photo) {
+                    Storage::disk('public')->delete($photo->path);
+                }
+            }
+
+            $count = Vacation::whereIn('id', $ids)->delete();
+            $message = "Se han eliminado $count vacaciones.";
+        } catch (\Exception $e) {
+            $message = 'Error al eliminar los elementos.';
+            return back()->withErrors(['general' => $message]);
+        }
+
+        return redirect()->route('vacation.index')->with(['general' => $message]);
     }
 }

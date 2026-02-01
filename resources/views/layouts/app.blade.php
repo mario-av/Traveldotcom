@@ -6,9 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Travel.com - Vacation Deals')</title>
+    <meta name="description" content="@yield('meta_description', 'Discover amazing vacation deals and create unforgettable memories with Travel.com. Book your next adventure today.')">
+    <meta name="keywords" content="@yield('meta_keywords', 'travel, vacation, holidays, booking, flight, hotel, tourism')">
+
+    {{-- Open Graph / Facebook --}}
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="@yield('title', 'Travel.com - Vacation Deals')">
+    <meta property="og:description" content="@yield('meta_description', 'Discover amazing vacation deals and create unforgettable memories with Travel.com.')">
+    <meta property="og:image" content="@yield('meta_image', asset('images/default-share.jpg'))">
+
+    {{-- Twitter --}}
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url()->current() }}">
+    <meta property="twitter:title" content="@yield('title', 'Travel.com - Vacation Deals')">
+    <meta property="twitter:description" content="@yield('meta_description', 'Discover amazing vacation deals and create unforgettable memories with Travel.com.')">
+    <meta property="twitter:image" content="@yield('meta_image', asset('images/default-share.jpg'))">
 
     {{-- Tailwind CSS CDN --}}
     <script src="https://cdn.tailwindcss.com"></script>
+
+    {{-- Alpine.js --}}
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     {{-- Bootstrap Icons --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -17,79 +36,160 @@
         [x-cloak] {
             display: none !important;
         }
+
+        :root {
+            --accent-500: #f43f5e;
+            /* Default Rose */
+            --accent-600: #e11d48;
+            --accent-50: #fff1f2;
+        }
+
+        .text-accent {
+            color: var(--accent-500);
+        }
+
+        .bg-accent {
+            background-color: var(--accent-500);
+        }
+
+        .bg-accent-hover:hover {
+            background-color: var(--accent-600);
+        }
+
+        .border-accent {
+            border-color: var(--accent-500);
+        }
+
+        .ring-accent:focus {
+            --tw-ring-color: var(--accent-500);
+        }
     </style>
 
-    @yield('styles')
+    <script>
+        // Apply theme from session (initial load)
+        const themes = {
+            rose: {
+                500: '#f43f5e',
+                600: '#e11d48',
+                50: '#fff1f2'
+            },
+            indigo: {
+                500: '#6366f1',
+                600: '#4f46e5',
+                50: '#eef2ff'
+            },
+            emerald: {
+                500: '#10b981',
+                600: '#059669',
+                50: '#ecfdf5'
+            },
+            amber: {
+                500: '#f59e0b',
+                600: '#d97706',
+                50: '#fffbeb'
+            },
+            violet: {
+                500: '#8b5cf6',
+                600: '#7c3aed',
+                50: '#f5f3ff'
+            },
+            cyan: {
+                500: '#06b6d4',
+                600: '#0891b2',
+                50: '#ecfeff'
+            },
+            slate: {
+                500: '#64748b',
+                600: '#475569',
+                50: '#f8fafc'
+            },
+            tangerine: {
+                500: '#f97316',
+                600: '#ea580c',
+                50: '#fff7ed'
+            }
+        };
+
+        const currentTheme = "{{ session('accent_color', 'rose') }}";
+        if (themes[currentTheme]) {
+            document.documentElement.style.setProperty('--accent-500', themes[currentTheme][500]);
+            document.documentElement.style.setProperty('--accent-600', themes[currentTheme][600]);
+            document.documentElement.style.setProperty('--accent-50', themes[currentTheme][50]);
+        }
+    </script>
 </head>
 
 <body class="bg-gray-50 min-h-screen flex flex-col">
     {{-- Navigation --}}
-    <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 shadow-lg">
+    <nav class="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 {{-- Logo --}}
                 <div class="flex items-center">
                     <a href="{{ route('main.index') }}" class="flex items-center space-x-2">
-                        <i class="bi bi-airplane text-white text-2xl"></i>
-                        <span class="text-white font-bold text-xl">Travel.com</span>
+                        <i class="bi bi-airplane-engines-fill text-rose-500 text-2xl"></i>
+                        <span class="text-rose-500 font-bold text-xl tracking-tighter uppercase">travel.com</span>
                     </a>
                 </div>
 
                 {{-- Navigation Links --}}
                 <div class="hidden md:flex items-center space-x-4">
-                    <a href="{{ route('main.index') }}" class="text-white hover:bg-white/10 px-3 py-2 rounded-md transition">
-                        <i class="bi bi-house-door me-1"></i> Home
+                    <a href="{{ route('main.index') }}" class="text-gray-600 hover:text-rose-500 px-3 py-2 text-sm font-medium transition">
+                        Home
                     </a>
 
                     @auth
-                    <a href="{{ route('home') }}" class="text-white hover:bg-white/10 px-3 py-2 rounded-md transition">
-                        <i class="bi bi-person-circle me-1"></i> {{ Auth::user()->name }}
+                    <a href="{{ route('home') }}" class="text-gray-600 hover:text-rose-500 px-3 py-2 text-sm font-medium transition">
+                        My Profile
                     </a>
 
-                    @if(Auth::user()->isAdmin())
-                    <a href="{{ route('vacation.index') }}" class="text-white hover:bg-white/10 px-3 py-2 rounded-md transition">
-                        <i class="bi bi-gear me-1"></i> Admin
+                    @if(Auth::user()->rol === 'admin')
+                    <a href="{{ route('vacation.index') }}" class="text-gray-600 hover:text-rose-500 px-3 py-2 text-sm font-medium transition">
+                        Management
                     </a>
                     @endif
 
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                    <form method="POST" action="{{ route('logout') }}" class="inline-block ml-4">
                         @csrf
-                        <button type="submit" class="text-white hover:bg-white/10 px-3 py-2 rounded-md transition">
-                            <i class="bi bi-box-arrow-right me-1"></i> Logout
+                        <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-gray-700 transition">
+                            Logout
                         </button>
                     </form>
                     @else
-                    <a href="{{ route('login') }}" class="text-white hover:bg-white/10 px-3 py-2 rounded-md transition">
-                        <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                    <a href="{{ route('login') }}" class="text-gray-600 hover:text-rose-500 px-3 py-2 text-sm font-medium transition">
+                        Log in
                     </a>
-                    <a href="{{ route('register') }}" class="bg-white text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-md font-semibold transition">
-                        Register
+                    <a href="{{ route('register') }}" class="bg-rose-500 text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-rose-600 transition shadow-sm ml-2">
+                        Sign up
                     </a>
                     @endauth
                 </div>
 
                 {{-- Mobile menu button --}}
                 <div class="md:hidden flex items-center">
-                    <button type="button" class="text-white" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
-                        <i class="bi bi-list text-2xl"></i>
+                    <button type="button" class="text-rose-500 p-2" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                        <i class="bi bi-list text-3xl"></i>
                     </button>
                 </div>
             </div>
         </div>
 
         {{-- Mobile menu --}}
-        <div id="mobile-menu" class="hidden md:hidden bg-blue-700 pb-4">
-            <div class="px-4 space-y-2">
-                <a href="{{ route('main.index') }}" class="block text-white hover:bg-white/10 px-3 py-2 rounded-md">Home</a>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <div class="px-4 pt-2 pb-4 space-y-1">
+                <a href="{{ route('main.index') }}" class="block text-gray-800 font-medium px-3 py-2 rounded-lg hover:bg-gray-50">Home</a>
                 @auth
-                <a href="{{ route('home') }}" class="block text-white hover:bg-white/10 px-3 py-2 rounded-md">My Account</a>
+                <a href="{{ route('home') }}" class="block text-gray-800 font-medium px-3 py-2 rounded-lg hover:bg-gray-50">My Profile</a>
+                @if(Auth::user()->rol === 'admin')
+                <a href="{{ route('vacation.index') }}" class="block text-gray-800 font-medium px-3 py-2 rounded-lg hover:bg-gray-50">Management</a>
+                @endif
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="block w-full text-left text-white hover:bg-white/10 px-3 py-2 rounded-md">Logout</button>
+                    <button type="submit" class="block w-full text-left text-rose-500 font-medium px-3 py-2 rounded-lg hover:bg-gray-50">Logout</button>
                 </form>
                 @else
-                <a href="{{ route('login') }}" class="block text-white hover:bg-white/10 px-3 py-2 rounded-md">Login</a>
-                <a href="{{ route('register') }}" class="block text-white hover:bg-white/10 px-3 py-2 rounded-md">Register</a>
+                <a href="{{ route('login') }}" class="block text-gray-800 font-medium px-3 py-2 rounded-lg hover:bg-gray-50">Log in</a>
+                <a href="{{ route('register') }}" class="block text-rose-500 font-bold px-3 py-2 rounded-lg hover:bg-gray-50">Sign up</a>
                 @endauth
             </div>
         </div>
@@ -131,36 +231,138 @@
     </main>
 
     {{-- Footer --}}
-    <footer class="bg-gray-800 text-white py-8 mt-auto">
+    <footer class="bg-gray-900 text-white pt-16 pb-8 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Travel.com</h3>
-                    <p class="text-gray-400">Discover amazing vacation deals and create unforgettable memories.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                {{-- About Column --}}
+                <div class="space-y-6">
+                    <a href="{{ route('main.index') }}" class="flex items-center space-x-2">
+                        <i class="bi bi-airplane-engines-fill text-accent text-3xl"></i>
+                        <span class="text-white font-bold text-2xl tracking-tighter uppercase">travel.com</span>
+                    </a>
+                    <p class="text-gray-400 leading-relaxed">
+                        Making world-class travel experiences accessible to everyone. Explore, book, and enjoy your next adventure with confidence.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-accent transition-colors">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-accent transition-colors">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-accent transition-colors">
+                            <i class="bi bi-twitter-x"></i>
+                        </a>
+                    </div>
                 </div>
+
+                {{-- Quick Links --}}
                 <div>
-                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="{{ route('main.index') }}" class="hover:text-white transition">All Vacations</a></li>
-                        @auth
-                        <li><a href="{{ route('home') }}" class="hover:text-white transition">My Bookings</a></li>
-                        @endauth
+                    <h3 class="text-sm font-bold uppercase tracking-widest mb-6 text-gray-100">Quick Links</h3>
+                    <ul class="space-y-4">
+                        <li><a href="{{ route('main.index') }}" class="text-gray-400 hover:text-accent transition-colors">Explore All</a></li>
+                        <li><a href="{{ route('home') }}" class="text-gray-400 hover:text-accent transition-colors">My Dashboard</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-accent transition-colors">Gift Cards</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-accent transition-colors">Travel Guide</a></li>
                     </ul>
                 </div>
+
+                {{-- Support --}}
                 <div>
-                    <h3 class="text-lg font-semibold mb-4">Contact</h3>
-                    <p class="text-gray-400">
-                        <i class="bi bi-envelope me-2"></i>support@travel.com
-                    </p>
+                    <h3 class="text-sm font-bold uppercase tracking-widest mb-6 text-gray-100">Support</h3>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-400 hover:text-accent transition-colors">Help Center</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-accent transition-colors">Safety Information</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-accent transition-colors">Cancellation Options</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-accent transition-colors">Report a Concern</a></li>
+                    </ul>
+                </div>
+
+                {{-- Newsletter --}}
+                <div class="space-y-6">
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-gray-100">Stay Updated</h3>
+                    <p class="text-gray-400 text-sm">Join our newsletter to get the best travel deals first.</p>
+                    <form action="#" method="POST" class="relative">
+                        <input type="email" placeholder="Email address"
+                            class="w-full bg-gray-800 border-none rounded-xl py-3 px-4 text-sm text-gray-100 focus:ring-2 focus:ring-accent outline-none">
+                        <button type="submit" class="absolute right-1 top-1 bottom-1 bg-accent hover:bg-accent-hover text-white px-4 rounded-lg transition-colors">
+                            <i class="bi bi-send"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
-            <div class="border-t border-gray-700 mt-8 pt-4 text-center text-gray-400">
-                <p>&copy; {{ date('Y') }} Travel.com. All rights reserved.</p>
+
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+                <p>&copy; {{ date('Y') }} Travel.com Inc. &bull; <a href="#" class="hover:underline">Privacy</a> &bull; <a href="#" class="hover:underline">Terms</a> &bull; <a href="#" class="hover:underline">Sitemap</a></p>
+                <div class="flex items-center space-x-4 mt-4 md:mt-0">
+                    <span class="flex items-center"><i class="bi bi-globe me-2"></i> English (US)</span>
+                    <span class="flex items-center font-bold text-gray-300">$ USD</span>
+                </div>
             </div>
         </div>
     </footer>
 
     @yield('scripts')
+    {{-- Global Loader --}}
+    <div id="global-loader" class="fixed inset-0 bg-white/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center transition-opacity duration-300 opacity-0">
+        <div class="flex flex-col items-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-rose-500"></div>
+            <p class="mt-4 text-rose-500 font-semibold animate-pulse">Loading...</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loader = document.getElementById('global-loader');
+
+            const showLoader = () => {
+                loader.classList.remove('hidden');
+                // Tiny delay to allow display flex to render before opacity transition
+                requestAnimationFrame(() => {
+                    loader.classList.remove('opacity-0');
+                });
+            };
+
+            const hideLoader = () => {
+                loader.classList.add('opacity-0');
+                setTimeout(() => {
+                    loader.classList.add('hidden');
+                }, 300);
+            };
+
+            // Form Submissions
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', () => {
+                    // Don't show if validation fails immediately (client-side)
+                    if (form.checkValidity()) {
+                        showLoader();
+                    }
+                });
+            });
+
+            // Internal Links
+            document.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const href = link.getAttribute('href');
+                    // Check if it's a valid internal link and not opening in new tab
+                    if (href &&
+                        (href.startsWith('/') || href.startsWith(window.location.origin)) &&
+                        !href.startsWith('#') &&
+                        !e.ctrlKey && !e.metaKey && !e.shiftKey &&
+                        link.target !== '_blank') {
+                        showLoader();
+                    }
+                });
+            });
+
+            // Handle Back/Forward Cache
+            window.addEventListener('pageshow', (event) => {
+                if (event.persisted) {
+                    hideLoader();
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

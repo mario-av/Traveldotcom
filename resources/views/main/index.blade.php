@@ -51,8 +51,8 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
                     <select name="category_id" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <option value="">All Categories</option>
-                        @foreach($categories ?? [] as $cat)
-                        <option value="{{ $cat->id }}" @if(($category_id ?? null)==$cat->id) selected @endif>{{ $cat->name }}</option>
+                        @foreach($categories ?? [] as $id => $name)
+                        <option value="{{ $id }}" @if(($category_id ?? null)==$id) selected @endif>{{ $name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -95,24 +95,62 @@
 
 @section('content')
 {{-- Hero Section --}}
-<section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">Discover Your Perfect Vacation</h1>
-        <p class="text-xl text-blue-100 mb-8">Explore amazing destinations at unbeatable prices</p>
+<section class="relative bg-black py-24 md:py-32 overflow-hidden -mt-[1px]">
+    <!-- Background Video -->
+    <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover opacity-50">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-traveling-on-a-highway-through-the-forest-42887-large.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-transparent"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+        <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 drop-shadow-md">
+            Find your next <span class="text-rose-500">adventure</span>
+        </h1>
+        <p class="text-xl text-gray-200 mb-10 max-w-2xl mx-auto font-medium">
+            Explore unique homes and experiences near you.
+        </p>
 
         {{-- Search Bar --}}
-        <form action="{{ route('main.index') }}" method="get" class="max-w-2xl mx-auto">
+        <form action="{{ route('main.index') }}" method="get" class="max-w-3xl mx-auto flex bg-white rounded-full p-1.5 shadow-2xl items-center transform hover:scale-[1.01] transition-all duration-300 border border-gray-100">
             @foreach(request()->except(['page','q']) as $key => $value)
             <input type="hidden" name="{{ $key }}" value="{{ $value }}">
             @endforeach
-            <div class="flex">
-                <input type="text" name="q" value="{{ $q ?? '' }}" placeholder="Search destinations, vacations..."
-                    class="flex-1 px-4 py-3 rounded-l-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300">
-                <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 px-6 py-3 rounded-r-lg font-semibold transition">
-                    <i class="bi bi-search me-1"></i>Search
-                </button>
+
+            <div class="flex-1 px-4 md:px-6">
+                <label for="searchInput" class="block text-[10px] font-bold text-gray-800 uppercase tracking-widest ml-1">Location</label>
+                <input type="text" id="searchInput" name="q" value="{{ $q ?? '' }}" placeholder="Where are you going?"
+                    class="w-full bg-transparent text-gray-700 placeholder-gray-400 focus:outline-none text-sm md:text-base border-none p-0">
             </div>
+
+            <button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white p-3 md:p-4 rounded-full flex items-center justify-center transition transform active:scale-95 shadow-md">
+                <i class="bi bi-search font-bold text-lg md:text-xl"></i>
+                <span class="ml-2 font-bold px-2 hidden md:inline">Search</span>
+            </button>
         </form>
+    </div>
+
+    {{-- Visual Category Links (Icon Strip) --}}
+    <div class="relative mt-12 max-w-5xl mx-auto px-4">
+        <div class="flex flex-wrap justify-center gap-6 md:gap-8">
+            <a href="{{ route('main.index') }}"
+                class="group flex flex-col items-center space-y-2 opacity-80 hover:opacity-100 transition {{ !request('category_id') ? 'border-b-2 border-white pb-2 !opacity-100' : '' }}">
+                <i class="bi bi-grid text-white text-2xl group-hover:scale-110 transition"></i>
+                <span class="text-white text-xs font-semibold">All</span>
+            </a>
+            @foreach($categories ?? [] as $id => $name)
+            <a href="{{ route('main.index', array_merge(request()->except(['page','category_id']), ['category_id' => $id])) }}"
+                class="group flex flex-col items-center space-y-2 opacity-70 hover:opacity-100 transition {{ request('category_id') == $id ? 'border-b-2 border-white pb-2 !opacity-100' : '' }}">
+                @if(Str::contains(strtolower($name), 'beach')) <i class="bi bi-umbrella text-white text-2xl group-hover:scale-110 transition"></i>
+                @elseif(Str::contains(strtolower($name), 'mountain')) <i class="bi bi-house-door text-white text-2xl group-hover:scale-110 transition"></i>
+                @elseif(Str::contains(strtolower($name), 'city')) <i class="bi bi-building text-white text-2xl group-hover:scale-110 transition"></i>
+                @elseif(Str::contains(strtolower($name), 'adventure')) <i class="bi bi-fire text-white text-2xl group-hover:scale-110 transition"></i>
+                @else <i class="bi bi-ticket-perforated text-white text-2xl group-hover:scale-110 transition"></i>
+                @endif
+                <span class="text-white text-xs font-semibold">{{ $name }}</span>
+            </a>
+            @endforeach
+        </div>
     </div>
 </section>
 
@@ -147,9 +185,10 @@
                 {{-- Image --}}
                 <div class="h-48 bg-gradient-to-br from-blue-400 to-indigo-500 relative">
                     @if($vacation->photos->count() > 0)
-                    <img src="{{ url('storage/' . $vacation->photos->first()->path) }}"
+                    @php $mainPhoto = $vacation->photos->first(); @endphp
+                    <img src="{{ $mainPhoto->url }}"
                         alt="{{ $vacation->title }}"
-                        class="w-full h-full object-cover">
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     @else
                     <div class="w-full h-full flex items-center justify-center">
                         <i class="bi bi-image text-white text-4xl opacity-50"></i>
@@ -184,7 +223,7 @@
                     </div>
 
                     <a href="{{ route('vacation.show', $vacation) }}"
-                        class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition">
+                        class="block w-full text-center bg-rose-500 hover:bg-rose-600 text-white py-2 rounded-lg transition font-semibold">
                         View Details
                     </a>
                 </div>
@@ -194,14 +233,14 @@
 
         {{-- Pagination --}}
         <div class="mt-8">
-            {{ $vacations->onEachSide(2)->links() }}
+            {{ $vacations->appends(request()->query())->onEachSide(2)->links() }}
         </div>
         @else
         <div class="text-center py-16">
             <i class="bi bi-search text-6xl text-gray-300 mb-4"></i>
             <h3 class="text-xl font-semibold text-gray-600 mb-2">No vacations found</h3>
             <p class="text-gray-500 mb-4">Try adjusting your search or filters</p>
-            <a href="{{ route('main.index') }}" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+            <a href="{{ route('main.index') }}" class="inline-block bg-rose-500 text-white px-6 py-2 rounded-lg hover:bg-rose-600 transition font-semibold">
                 Clear Filters
             </a>
         </div>

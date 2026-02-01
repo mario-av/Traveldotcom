@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VacationController;
 use Illuminate\Support\Facades\Auth;
@@ -45,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/home/edit', [HomeController::class, 'edit'])->name('home.edit');
     Route::put('/home/update', [HomeController::class, 'update'])->name('home.update');
+    Route::post('/theme/accent', [ThemeController::class, 'setAccent'])->name('theme.accent');
 });
 
 /*
@@ -86,7 +88,12 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     Route::post('/booking/{booking}/confirm', [BookingController::class, 'confirm'])->name('booking.confirm');
 
     // Review management
+    Route::get('/review', [ReviewController::class, 'index'])->name('review.index');
     Route::post('/review/{review}/approve', [ReviewController::class, 'approve'])->name('review.approve');
+
+    // User management extras
+    Route::post('/user/{user}/verify', [UserController::class, 'verifyEmail'])->name('user.verify');
+    Route::post('/user/{user}/role', [UserController::class, 'updateRole'])->name('user.role');
 
     // Bulk delete
     Route::delete('/vacation/delete/group', [VacationController::class, 'deleteGroup'])->name('vacation.delete.group');

@@ -2,56 +2,50 @@
 
 namespace App\Custom;
 
-/**
- * SentComments - Manages temporary edit permissions for reviews.
- * Reviews can only be edited within 10 minutes of creation.
- */
 class SentComments
 {
     /**
-     * Check if a review was sent recently (editable for 10 minutes).
+     * Check if a comment/review was sent recently (within 10 minutes).
      *
-     * @param int $reviewId The review ID to check.
-     * @return bool True if review is still editable.
+     * @param int $id The ID of the comment/review.
+     * @return bool
      */
-    public static function isComment(int $reviewId): bool
+    public static function isComment(int $id): bool
     {
         $comments = session('sent_comments', []);
 
-        if (!isset($comments[$reviewId])) {
+        if (!isset($comments[$id])) {
             return false;
         }
 
-        $sentTime = $comments[$reviewId];
+        $sentTime = $comments[$id];
         $now = time();
-        $tenMinutes = 10 * 60; // 10 minutes in seconds
+        $tenMinutes = 10 * 60;
 
         return ($now - $sentTime) <= $tenMinutes;
     }
 
     /**
-     * Register a review as sent (starts the edit timer).
+     * Register a comment/review as sent.
      *
-     * @param int $reviewId The review ID to register.
-     * @return void
+     * @param int $id
      */
-    public static function addComment(int $reviewId): void
+    public static function addComment(int $id): void
     {
         $comments = session('sent_comments', []);
-        $comments[$reviewId] = time();
+        $comments[$id] = time();
         session(['sent_comments' => $comments]);
     }
 
     /**
-     * Remove a review from the edit registry.
+     * Remove a comment/review from the tracked session list.
      *
-     * @param int $reviewId The review ID to remove.
-     * @return void
+     * @param int $id
      */
-    public static function removeComment(int $reviewId): void
+    public static function removeComment(int $id): void
     {
         $comments = session('sent_comments', []);
-        unset($comments[$reviewId]);
+        unset($comments[$id]);
         session(['sent_comments' => $comments]);
     }
 }

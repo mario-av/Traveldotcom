@@ -26,15 +26,29 @@
 @endsection
 
 @section('content')
-<div class="py-8">
+@include('partials.admin_nav')
+
+<div class="py-4">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {{-- Header --}}
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-2xl font-bold text-gray-800">Manage Users</h1>
-            <a href="{{ route('user.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+            <a href="{{ route('user.create') }}" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg transition font-semibold">
                 <i class="bi bi-plus-lg me-1"></i>Add User
             </a>
         </div>
+
+        @if(session('success'))
+        <div class="mb-6 p-4 rounded-lg bg-green-50 border border-green-200 text-green-700">
+            <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+        </div>
+        @endif
+
+        @if(session('error'))
+        <div class="mb-6 p-4 rounded-lg bg-red-50 border border-red-200 text-red-700">
+            <i class="bi bi-exclamation-circle me-2"></i>{{ session('error') }}
+        </div>
+        @endif
 
         {{-- Bulk Delete Form --}}
         <form id="form-delete-group" action="{{ route('admin.user.delete.group') }}" method="POST">
@@ -44,7 +58,7 @@
             {{-- Toolbar --}}
             <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
                 <div class="flex items-center justify-between">
-                    <button type="submit" class="text-red-600 hover:text-red-700"
+                    <button type="submit" class="text-red-600 hover:text-red-700 disabled:opacity-50"
                         onclick="return confirm('Delete selected users?')">
                         <i class="bi bi-trash me-1"></i>Delete Selected
                     </button>
@@ -54,83 +68,97 @@
 
             {{-- Table --}}
             <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                <table class="w-full">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-4 py-3 text-left">
-                                <input type="checkbox" id="selectAll" class="rounded border-gray-300">
-                            </th>
-                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">#</th>
-                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Name</th>
-                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Email</th>
-                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Role</th>
-                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Verified</th>
-                            <th class="px-4 py-3 text-right text-sm font-semibold text-gray-600">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100">
-                        @forelse($users as $user)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-3">
-                                <input type="checkbox" name="ids[]" value="{{ $user->id }}" class="item-checkbox rounded border-gray-300">
-                            </td>
-                            <td class="px-4 py-3 text-gray-500">{{ $user->id }}</td>
-                            <td class="px-4 py-3">
-                                <div class="flex items-center space-x-3">
-                                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
-                                        <span class="text-white font-bold">{{ substr($user->name, 0, 1) }}</span>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left">
+                                    <input type="checkbox" id="selectAll" class="rounded border-gray-300">
+                                </th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">User</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Role</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Status</th>
+                                <th class="px-4 py-3 text-right text-sm font-semibold text-gray-600">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            @forelse($users as $user)
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <input type="checkbox" name="ids[]" value="{{ $user->id }}" class="item-checkbox rounded border-gray-300">
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 bg-gradient-to-br from-rose-400 to-rose-600 rounded-full flex items-center justify-center shrink-0 shadow-sm">
+                                            <span class="text-white font-bold text-sm">{{ substr($user->name, 0, 1) }}</span>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium text-gray-800">{{ $user->name }}</p>
+                                            <p class="text-xs text-gray-500">{{ $user->email }}</p>
+                                        </div>
                                     </div>
-                                    <span class="font-medium text-gray-800">{{ $user->name }}</span>
-                                </div>
-                            </td>
-                            <td class="px-4 py-3 text-gray-600">{{ $user->email }}</td>
-                            <td class="px-4 py-3">
-                                <span class="px-2 py-1 rounded-full text-xs 
-                                    {{ $user->rol === 'admin' ? 'bg-red-100 text-red-600' : 
-                                       ($user->rol === 'advanced' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600') }}">
-                                    {{ ucfirst($user->rol) }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-3">
-                                @if($user->hasVerifiedEmail())
-                                <span class="text-green-600"><i class="bi bi-check-circle-fill"></i></span>
-                                @else
-                                <span class="text-gray-400"><i class="bi bi-x-circle"></i></span>
-                                @endif
-                            </td>
-                            <td class="px-4 py-3 text-right">
-                                <div class="flex items-center justify-end space-x-2">
-                                    <a href="{{ route('user.show', $user) }}" class="text-gray-500 hover:text-blue-600" title="View">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a href="{{ route('user.edit', $user) }}" class="text-gray-500 hover:text-yellow-600" title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    @if($user->id !== Auth::id())
-                                    <button type="button"
-                                        onclick="openDeleteModal('{{ $user->name }}', '{{ route('user.destroy', $user) }}')"
-                                        class="text-gray-500 hover:text-red-600" title="Delete">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="7" class="px-4 py-8 text-center text-gray-500">
-                                No users found.
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                    <tfoot class="bg-gray-50">
-                        <tr>
-                            <td colspan="5" class="px-4 py-3 text-sm text-gray-600">Total users:</td>
-                            <td colspan="2" class="px-4 py-3 text-sm font-semibold text-gray-800">{{ $users->total() }}</td>
-                        </tr>
-                    </tfoot>
-                </table>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <form action="{{ route('admin.user.role', $user) }}" method="POST" class="flex items-center">
+                                        @csrf
+                                        <select name="rol" onchange="this.form.submit()"
+                                            class="text-xs border-gray-200 rounded-lg focus:ring-rose-500 focus:border-rose-500 py-1 pl-2 pr-8
+                                            {{ $user->rol === 'admin' ? 'bg-red-50 text-red-700 border-red-100' : 
+                                               ($user->rol === 'advanced' ? 'bg-purple-50 text-purple-700 border-purple-100' : 'bg-blue-50 text-blue-700 border-blue-100') }}">
+                                            <option value="normal" {{ $user->rol === 'normal' ? 'selected' : '' }}>User</option>
+                                            <option value="advanced" {{ $user->rol === 'advanced' ? 'selected' : '' }}>Advanced</option>
+                                            <option value="admin" {{ $user->rol === 'admin' ? 'selected' : '' }}>Admin</option>
+                                        </select>
+                                    </form>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center space-x-2 text-xs">
+                                        @if($user->hasVerifiedEmail())
+                                        <span class="flex items-center text-green-600 font-medium">
+                                            <i class="bi bi-patch-check-fill me-1"></i>Verified
+                                        </span>
+                                        @else
+                                        <span class="flex items-center text-gray-400 font-medium">
+                                            <i class="bi bi-clock-history me-1"></i>Unverified
+                                        </span>
+                                        <form action="{{ route('admin.user.verify', $user) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="text-rose-500 hover:text-rose-600 underline font-bold">Approve</button>
+                                        </form>
+                                        @endif
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end space-x-3">
+                                        <a href="{{ route('user.edit', $user) }}" class="text-gray-400 hover:text-yellow-600 transition" title="Edit">
+                                            <i class="bi bi-pencil-square text-lg"></i>
+                                        </a>
+                                        @if($user->id !== Auth::id())
+                                        <button type="button"
+                                            onclick="openDeleteModal('{{ addslashes($user->name) }}', '{{ route('user.destroy', $user) }}')"
+                                            class="text-gray-400 hover:text-red-600 transition" title="Delete">
+                                            <i class="bi bi-trash3 text-lg"></i>
+                                        </button>
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="7" class="px-4 py-8 text-center text-gray-500">
+                                    No users found.
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                        <tfoot class="bg-gray-50">
+                            <tr>
+                                <td colspan="5" class="px-4 py-3 text-sm text-gray-600">Total users:</td>
+                                <td colspan="2" class="px-4 py-3 text-sm font-semibold text-gray-800">{{ $users->total() }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </form>
 

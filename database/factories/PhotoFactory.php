@@ -27,8 +27,13 @@ class PhotoFactory extends Factory
      */
     public function definition(): array
     {
+        // Random travel/vacation image from Picsum (Reliable)
+        // We use a random seed to consistently get different images but reliable URLs
+        $seed = $this->faker->uuid();
+
         return [
-            'path' => 'vacations/' . $this->faker->uuid() . '.jpg',
+            // Picsum provides reliable placeholders
+            'path' => "https://picsum.photos/seed/{$seed}/800/600",
             'original_name' => $this->faker->word() . '.jpg',
             'is_main' => false,
             'vacation_id' => Vacation::factory(),

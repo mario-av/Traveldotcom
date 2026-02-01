@@ -20,13 +20,13 @@ class VerificationController extends Controller
      * @param Request $request The incoming request.
      * @return View|RedirectResponse The verification notice or redirect if verified.
      */
-    public function notice(Request $request): View|RedirectResponse
+    public function show(Request $request): View|RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
             return redirect()->route('home');
         }
 
-        return view('auth.verify-email');
+        return view('auth.verify');
     }
 
     /**
