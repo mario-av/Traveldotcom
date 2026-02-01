@@ -5,14 +5,20 @@ set -e
 echo "Running migrations..."
 php artisan migrate --force
 
-# Seed database only if admin user doesn't exist (prevents duplicates)
+# Seed database only if users table is empty (prevents duplicates)
 echo "Checking if seeding is needed..."
-php artisan tinker --execute="exit(App\Models\User::where('email', 'admin@travel.com')->exists() ? 0 : 1);" 2>/dev/null
-if [ $? -eq 1 ]; then
-    echo "Seeding database..."
+USER_COUNT=$(php -r "
+require '/var/www/html/vendor/autoload.php';
+\$app = require_once '/var/www/html/bootstrap/app.php';
+\$app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
+echo \App\Models\User::count();
+" 2>/dev/null || echo "0")
+
+if [ "$USER_COUNT" = "0" ]; then
+    echo "Database is empty, seeding..."
     php artisan db:seed --force
 else
-    echo "Database already seeded, skipping..."
+    echo "Database has $USER_COUNT users, skipping seed..."
 fi
 
 # Cache configuration
