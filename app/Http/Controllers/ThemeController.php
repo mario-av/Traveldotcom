@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class ThemeController extends Controller
 {
     /**
-     * Set the application's accent color in the session.
+     * Set the application's accent color.
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -16,11 +17,20 @@ class ThemeController extends Controller
     public function setAccent(Request $request)
     {
         $request->validate([
-            'color' => 'required|string|in:rose,indigo,emerald,amber,violet,cyan,slate,tangerine'
+            'accent_color' => 'required|string|in:rose,indigo,emerald,amber,violet,cyan,slate,tangerine'
         ]);
 
-        Session::put('accent_color', $request->color);
+        $color = $request->accent_color;
+        Session::put('accent_color', $color);
 
-        return response()->json(['success' => true, 'color' => $request->color]);
+        // Persist to database if user is logged in
+        if (Auth::check()) {
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+            $user->accent_color = $color;
+            $user->save();
+        }
+
+        return response()->json(['success' => true, 'color' => $color]);
     }
 }
