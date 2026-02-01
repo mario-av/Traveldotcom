@@ -43,7 +43,7 @@
                         <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Comentario *</label>
                         <textarea id="comment" name="comment" rows="5" required
                             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 @error('comment') border-red-500 @enderror"
-                            placeholder="Describe tu experiencia...">{{ old('comment', $review->comment) }}</textarea>
+                            placeholder="Describe tu experiencia...">{{ old('comment', $review->content) }}</textarea>
                         @error('comment')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
