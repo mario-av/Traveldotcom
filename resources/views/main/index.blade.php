@@ -118,9 +118,8 @@
             @endforeach
 
             <div class="flex-1 px-4 md:px-6">
-                <label for="searchInput" class="block text-[10px] font-bold text-gray-800 uppercase tracking-widest ml-1">Location</label>
                 <input type="text" id="searchInput" name="q" value="{{ $q ?? '' }}" placeholder="Where are you going?"
-                    class="w-full bg-transparent text-gray-700 placeholder-gray-400 focus:outline-none text-sm md:text-base border-none p-0">
+                    class="w-full bg-transparent text-gray-700 placeholder-gray-400 focus:outline-none text-sm md:text-base border-none p-0 py-2">
             </div>
 
             <button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white p-3 md:p-4 rounded-full flex items-center justify-center transition transform active:scale-95 shadow-md">
