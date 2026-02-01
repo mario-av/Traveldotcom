@@ -7,16 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Comentario Model - Represents user comments and reviews.
+ * Review Model - Represents user reviews for vacations.
  *
  * @property int $id
- * @property string $contenido
- * @property int $puntuacion
- * @property bool $aprobado
+ * @property string $content
+ * @property int $rating
+ * @property bool $approved
  * @property int $user_id
- * @property int $vacacion_id
+ * @property int $vacation_id
  */
-class Comentario extends Model
+class Review extends Model
 {
     use HasFactory;
 
@@ -25,7 +25,7 @@ class Comentario extends Model
      *
      * @var string
      */
-    protected $table = 'comentarios';
+    protected $table = 'reviews';
 
     /**
      * The attributes that are mass assignable.
@@ -33,11 +33,11 @@ class Comentario extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'contenido',
-        'puntuacion',
-        'aprobado',
+        'content',
+        'rating',
+        'approved',
         'user_id',
-        'vacacion_id',
+        'vacation_id',
     ];
 
     /**
@@ -46,11 +46,11 @@ class Comentario extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'aprobado' => 'boolean',
+        'approved' => 'boolean',
     ];
 
     /**
-     * Get the user who wrote this comment.
+     * Get the user who wrote this review.
      *
      * @return BelongsTo
      */
@@ -60,12 +60,12 @@ class Comentario extends Model
     }
 
     /**
-     * Get the vacation for this comment.
+     * Get the vacation for this review.
      *
      * @return BelongsTo
      */
-    public function vacacion(): BelongsTo
+    public function vacation(): BelongsTo
     {
-        return $this->belongsTo(Vacacion::class, 'vacacion_id');
+        return $this->belongsTo(Vacation::class, 'vacation_id');
     }
 }

@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Tipo Model - Represents vacation type categories.
+ * Category Model - Represents vacation type categories.
  *
  * @property int $id
- * @property string $nombre
- * @property string|null $descripcion
+ * @property string $name
+ * @property string|null $description
  */
-class Tipo extends Model
+class Category extends Model
 {
     use HasFactory;
 
@@ -22,7 +22,7 @@ class Tipo extends Model
      *
      * @var string
      */
-    protected $table = 'tipos';
+    protected $table = 'categories';
 
     /**
      * The attributes that are mass assignable.
@@ -30,17 +30,17 @@ class Tipo extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'nombre',
-        'descripcion',
+        'name',
+        'description',
     ];
 
     /**
-     * Get the vacations for this type.
+     * Get the vacations for this category.
      *
      * @return HasMany
      */
-    public function vacaciones(): HasMany
+    public function vacations(): HasMany
     {
-        return $this->hasMany(Vacacion::class, 'tipo_id');
+        return $this->hasMany(Vacation::class, 'category_id');
     }
 }

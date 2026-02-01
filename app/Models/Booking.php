@@ -7,17 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Reserva Model - Represents user vacation bookings.
+ * Booking Model - Represents user vacation bookings.
  *
  * @property int $id
- * @property int $num_personas
- * @property float $precio_total
- * @property string $estado
- * @property string|null $notas
+ * @property int $num_guests
+ * @property float $total_price
+ * @property string $status
+ * @property string|null $notes
  * @property int $user_id
- * @property int $vacacion_id
+ * @property int $vacation_id
  */
-class Reserva extends Model
+class Booking extends Model
 {
     use HasFactory;
 
@@ -26,7 +26,7 @@ class Reserva extends Model
      *
      * @var string
      */
-    protected $table = 'reservas';
+    protected $table = 'bookings';
 
     /**
      * The attributes that are mass assignable.
@@ -34,12 +34,12 @@ class Reserva extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'num_personas',
-        'precio_total',
-        'estado',
-        'notas',
+        'num_guests',
+        'total_price',
+        'status',
+        'notes',
         'user_id',
-        'vacacion_id',
+        'vacation_id',
     ];
 
     /**
@@ -48,11 +48,11 @@ class Reserva extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'precio_total' => 'decimal:2',
+        'total_price' => 'decimal:2',
     ];
 
     /**
-     * Get the user who made this reservation.
+     * Get the user who made this booking.
      *
      * @return BelongsTo
      */
@@ -62,12 +62,12 @@ class Reserva extends Model
     }
 
     /**
-     * Get the vacation for this reservation.
+     * Get the vacation for this booking.
      *
      * @return BelongsTo
      */
-    public function vacacion(): BelongsTo
+    public function vacation(): BelongsTo
     {
-        return $this->belongsTo(Vacacion::class, 'vacacion_id');
+        return $this->belongsTo(Vacation::class, 'vacation_id');
     }
 }

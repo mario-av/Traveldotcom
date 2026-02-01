@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Migration for creating the fotos table.
+ * Migration for creating the photos table.
  * Stores vacation package images.
  */
 return new class extends Migration
@@ -17,12 +17,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fotos', function (Blueprint $table) {
+        Schema::create('photos', function (Blueprint $table) {
             $table->id();
-            $table->string('ruta', 255);
-            $table->string('nombre_original', 255)->nullable();
-            $table->boolean('principal')->default(false);
-            $table->foreignId('vacacion_id')->constrained('vacaciones')->onDelete('cascade');
+            $table->string('path', 255);
+            $table->string('original_name', 255)->nullable();
+            $table->boolean('is_main')->default(false);
+            $table->foreignId('vacation_id')->constrained('vacations')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('fotos');
+        Schema::dropIfExists('photos');
     }
 };

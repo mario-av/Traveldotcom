@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Migration for creating the tipos table.
+ * Migration for creating the categories table.
  * Stores vacation type categories.
  */
 return new class extends Migration
@@ -17,10 +17,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tipos', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 100);
-            $table->text('descripcion')->nullable();
+            $table->string('name', 100);
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tipos');
+        Schema::dropIfExists('categories');
     }
 };

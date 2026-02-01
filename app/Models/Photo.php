@@ -7,15 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Foto Model - Represents vacation package images.
+ * Photo Model - Represents vacation package images.
  *
  * @property int $id
- * @property string $ruta
- * @property string|null $nombre_original
- * @property bool $principal
- * @property int $vacacion_id
+ * @property string $path
+ * @property string|null $original_name
+ * @property bool $is_main
+ * @property int $vacation_id
  */
-class Foto extends Model
+class Photo extends Model
 {
     use HasFactory;
 
@@ -24,7 +24,7 @@ class Foto extends Model
      *
      * @var string
      */
-    protected $table = 'fotos';
+    protected $table = 'photos';
 
     /**
      * The attributes that are mass assignable.
@@ -32,10 +32,10 @@ class Foto extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'ruta',
-        'nombre_original',
-        'principal',
-        'vacacion_id',
+        'path',
+        'original_name',
+        'is_main',
+        'vacation_id',
     ];
 
     /**
@@ -44,7 +44,7 @@ class Foto extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'principal' => 'boolean',
+        'is_main' => 'boolean',
     ];
 
     /**
@@ -52,8 +52,8 @@ class Foto extends Model
      *
      * @return BelongsTo
      */
-    public function vacacion(): BelongsTo
+    public function vacation(): BelongsTo
     {
-        return $this->belongsTo(Vacacion::class, 'vacacion_id');
+        return $this->belongsTo(Vacation::class, 'vacation_id');
     }
 }

@@ -80,28 +80,28 @@ class User extends Authenticatable
      *
      * @return HasMany
      */
-    public function vacaciones(): HasMany
+    public function vacations(): HasMany
     {
-        return $this->hasMany(Vacacion::class, 'user_id');
+        return $this->hasMany(Vacation::class, 'user_id');
     }
 
     /**
-     * Get the reservations made by this user.
+     * Get the bookings made by this user.
      *
      * @return HasMany
      */
-    public function reservas(): HasMany
+    public function bookings(): HasMany
     {
-        return $this->hasMany(Reserva::class, 'user_id');
+        return $this->hasMany(Booking::class, 'user_id');
     }
 
     /**
-     * Get the comments made by this user.
+     * Get the reviews made by this user.
      *
      * @return HasMany
      */
-    public function comentarios(): HasMany
+    public function reviews(): HasMany
     {
-        return $this->hasMany(Comentario::class, 'user_id');
+        return $this->hasMany(Review::class, 'user_id');
     }
 }
