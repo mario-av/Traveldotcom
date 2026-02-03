@@ -1,0 +1,47 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Github
+.github
+
+# Enviroment configs
+.env
+.env.example
+.env.backup
+.env.production
+auth.json
+
+# Dependencies
+/node_modules
+/vendor
+
+# IDEs
+.idea
+.vscode
+.zed
+.fleet
+*.sublime-project
+*.sublime-workspace
+
+# Testing
+tests
+phpunit.xml
+.phpunit.result.cache
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker
+docker-compose.yml
+.dockerignore
+Dockerfile
+
+# Laravel specific
+/storage/*.key
+/public/hot
+/public/storage
