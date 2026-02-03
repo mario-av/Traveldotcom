@@ -143,7 +143,7 @@
                         My Profile
                     </a>
 
-                    @if(Auth::user()->rol === 'admin')
+                    @if(Auth::user()->isAdvanced() || Auth::user()->isVerifiedRole())
                     <a href="{{ route('vacation.index') }}" class="text-gray-600 hover:text-rose-500 px-3 py-2 text-sm font-medium transition">
                         Management
                     </a>
@@ -180,7 +180,7 @@
                 <a href="{{ route('main.index') }}" class="block text-gray-800 font-medium px-3 py-2 rounded-lg hover:bg-gray-50">Home</a>
                 @auth
                 <a href="{{ route('home') }}" class="block text-gray-800 font-medium px-3 py-2 rounded-lg hover:bg-gray-50">My Profile</a>
-                @if(Auth::user()->rol === 'admin')
+                @if(Auth::user()->isAdvanced() || Auth::user()->isVerifiedRole())
                 <a href="{{ route('vacation.index') }}" class="block text-gray-800 font-medium px-3 py-2 rounded-lg hover:bg-gray-50">Management</a>
                 @endif
                 <form method="POST" action="{{ route('logout') }}">

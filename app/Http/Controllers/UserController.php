@@ -12,8 +12,23 @@ use Illuminate\View\View;
  * UserController - Admin controller for user management.
  * Requires admin role for all operations.
  */
+
+use App\Http\Middleware\AdminMiddleware;
+
+/**
+ * UserController - Admin controller for user management.
+ * Requires admin role for all operations.
+ */
 class UserController extends Controller
 {
+    /**
+     * Constructor - Apply middleware.
+     */
+    public function __construct()
+    {
+        $this->middleware(AdminMiddleware::class);
+    }
+
     /**
      * Display a listing of all users.
      *
