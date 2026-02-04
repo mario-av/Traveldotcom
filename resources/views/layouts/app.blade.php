@@ -9,27 +9,27 @@
     <meta name="description" content="@yield('meta_description', 'Discover amazing vacation deals and create unforgettable memories with traveldotcom. Book your next adventure today.')">
     <meta name="keywords" content="@yield('meta_keywords', 'travel, vacation, holidays, booking, flight, hotel, tourism')">
 
-    {{-- Open Graph / Facebook --}}
+    
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="@yield('title', 'traveldotcom - Vacation Deals')">
     <meta property="og:description" content="@yield('meta_description', 'Discover amazing vacation deals and create unforgettable memories with traveldotcom.')">
     <meta property="og:image" content="@yield('meta_image', asset('images/default-share.jpg'))">
 
-    {{-- Twitter --}}
+    
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
     <meta property="twitter:title" content="@yield('title', 'traveldotcom - Vacation Deals')">
     <meta property="twitter:description" content="@yield('meta_description', 'Discover amazing vacation deals and create unforgettable memories with traveldotcom.')">
     <meta property="twitter:image" content="@yield('meta_image', asset('images/default-share.jpg'))">
 
-    {{-- Tailwind CSS CDN --}}
+    
     <script src="https://cdn.tailwindcss.com"></script>
 
-    {{-- Alpine.js --}}
+    
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    {{-- Bootstrap Icons --}}
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
@@ -39,7 +39,7 @@
 
         :root {
             --accent-500: #f43f5e;
-            /* Default Rose */
+            
             --accent-600: #e11d48;
             --accent-50: #fff1f2;
         }
@@ -66,7 +66,7 @@
     </style>
 
     <script>
-        // Apply theme from session (initial load)
+        
         const themes = {
             rose: {
                 500: '#f43f5e',
@@ -120,11 +120,11 @@
 </head>
 
 <body class="bg-gray-50 min-h-screen flex flex-col">
-    {{-- Navigation --}}
+    
     <nav class="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
-                {{-- Logo --}}
+                
                 <div class="flex items-center">
                     <a href="{{ route('main.index') }}" class="flex items-center space-x-2">
                         <i class="bi bi-airplane-engines-fill text-rose-500 text-2xl"></i>
@@ -132,7 +132,7 @@
                     </a>
                 </div>
 
-                {{-- Navigation Links --}}
+                
                 <div class="hidden md:flex items-center space-x-4">
                     <a href="{{ route('main.index') }}" class="text-gray-600 hover:text-rose-500 px-3 py-2 text-sm font-medium transition">
                         Home
@@ -165,7 +165,7 @@
                     @endauth
                 </div>
 
-                {{-- Mobile menu button --}}
+                
                 <div class="md:hidden flex items-center">
                     <button type="button" class="text-rose-500 p-2" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
                         <i class="bi bi-list text-3xl"></i>
@@ -174,7 +174,7 @@
             </div>
         </div>
 
-        {{-- Mobile menu --}}
+        
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
             <div class="px-4 pt-2 pb-4 space-y-1">
                 <a href="{{ route('main.index') }}" class="block text-gray-800 font-medium px-3 py-2 rounded-lg hover:bg-gray-50">Home</a>
@@ -195,7 +195,7 @@
         </div>
     </nav>
 
-    {{-- Flash Messages --}}
+    
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
         @if(session('general'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-4">
@@ -222,19 +222,19 @@
         @enderror
     </div>
 
-    {{-- Modals --}}
+    
     @yield('modal')
 
-    {{-- Main Content --}}
+    
     <main class="flex-grow">
         @yield('content')
     </main>
 
-    {{-- Footer --}}
+    
     <footer class="bg-gray-900 text-white pt-16 pb-8 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-                {{-- About Column --}}
+                
                 <div class="space-y-6">
                     <a href="{{ route('main.index') }}" class="flex items-center space-x-2">
                         <i class="bi bi-airplane-engines-fill text-accent text-3xl"></i>
@@ -256,7 +256,7 @@
                     </div>
                 </div>
 
-                {{-- Quick Links --}}
+                
                 <div>
                     <h3 class="text-sm font-bold uppercase tracking-widest mb-6 text-gray-100">Quick Links</h3>
                     <ul class="space-y-4">
@@ -267,7 +267,7 @@
                     </ul>
                 </div>
 
-                {{-- Support --}}
+                
                 <div>
                     <h3 class="text-sm font-bold uppercase tracking-widest mb-6 text-gray-100">Support</h3>
                     <ul class="space-y-4">
@@ -278,7 +278,7 @@
                     </ul>
                 </div>
 
-                {{-- Newsletter --}}
+                
                 <div class="space-y-6">
                     <h3 class="text-sm font-bold uppercase tracking-widest text-gray-100">Stay Updated</h3>
                     <p class="text-gray-400 text-sm">Join our newsletter to get the best travel deals first.</p>
@@ -303,7 +303,7 @@
     </footer>
 
     @yield('scripts')
-    {{-- Global Loader --}}
+    
     <div id="global-loader" class="fixed inset-0 bg-white/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center transition-opacity duration-300 opacity-0">
         <div class="flex flex-col items-center">
             <div class="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-rose-500"></div>
@@ -329,10 +329,10 @@
                 }, 300);
             };
 
-            // Hide loader on initial page load (in case it was stuck)
+            
             window.addEventListener('load', hideLoader);
 
-            // Global Click Listener (Event Delegation)
+            
             document.addEventListener('click', (e) => {
                 const link = e.target.closest('a');
 
@@ -341,21 +341,21 @@
                 const href = link.getAttribute('href');
                 const target = link.getAttribute('target');
 
-                // Logic to decide if we show loader
+                
                 if (href &&
                     href !== '#' &&
                     !href.startsWith('javascript:') &&
                     !href.startsWith('mailto:') &&
                     !href.startsWith('tel:') &&
-                    (href.startsWith('/') || href.startsWith(window.location.origin) || !href.startsWith('http')) && // Internal links
+                    (href.startsWith('/') || href.startsWith(window.location.origin) || !href.startsWith('http')) && 
                     target !== '_blank' &&
-                    !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey // Not opening in new tab
+                    !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey 
                 ) {
                     showLoader();
                 }
             });
 
-            // Form Submissions
+            
             document.addEventListener('submit', (e) => {
                 const form = e.target;
                 if (!e.defaultPrevented && form.checkValidity()) {
@@ -363,7 +363,7 @@
                 }
             });
 
-            // Handle Back/Forward Cache (restores page from cache)
+            
             window.addEventListener('pageshow', (event) => {
                 if (event.persisted) {
                     hideLoader();

@@ -46,7 +46,7 @@ class BookingController extends Controller
      */
     public function store(Request $request, Vacation $vacation): RedirectResponse
     {
-        // If vacation is not injected (missing route param), find it from request
+        
         if (!$vacation->exists) {
             $vacation = Vacation::findOrFail($request->vacation_id);
         }
@@ -57,17 +57,17 @@ class BookingController extends Controller
         ]);
 
         try {
-            // Check availability
+            
             if ($vacation->available_slots < $validated['num_guests']) {
                 return redirect()
                     ->back()
                     ->with('error', 'Not enough available slots for this booking.');
             }
 
-            // Calculate total price
+            
             $totalPrice = $vacation->price * $validated['num_guests'];
 
-            // Create booking
+            
             $booking = Booking::create([
                 'user_id' => auth()->id(),
                 'vacation_id' => $vacation->id,
@@ -77,7 +77,7 @@ class BookingController extends Controller
                 'notes' => $validated['notes'] ?? null,
             ]);
 
-            // Update available slots
+            
             $vacation->decrement('available_slots', $validated['num_guests']);
 
             return redirect()
@@ -98,7 +98,7 @@ class BookingController extends Controller
      */
     public function show(Booking $booking): View
     {
-        // Ensure user owns this booking
+        
         if ($booking->user_id !== auth()->id() && !auth()->user()->isAdmin()) {
             abort(403, 'Unauthorized access to this booking.');
         }
@@ -116,7 +116,7 @@ class BookingController extends Controller
      */
     public function cancel(Booking $booking): RedirectResponse
     {
-        // Ensure user owns this booking
+        
         if ($booking->user_id !== auth()->id() && !auth()->user()->isAdmin()) {
             abort(403, 'Unauthorized access to this booking.');
         }
@@ -128,7 +128,7 @@ class BookingController extends Controller
                     ->with('error', 'This booking is already cancelled.');
             }
 
-            // Restore available slots
+            
             $booking->vacation->increment('available_slots', $booking->num_guests);
 
             $booking->update(['status' => 'cancelled']);

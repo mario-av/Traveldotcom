@@ -20,7 +20,7 @@
                 @method('PUT')
 
                 <div class="space-y-6">
-                    {{-- Rating --}}
+                    
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Puntuación *</label>
                         <div class="flex space-x-2">
@@ -38,7 +38,7 @@
                         @enderror
                     </div>
 
-                    {{-- Comment --}}
+                    
                     <div>
                         <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Comentario *</label>
                         <textarea id="comment" name="comment" rows="5" required
@@ -66,7 +66,7 @@
 
 @section('scripts')
 <script>
-    // Interactive star rating
+    
     document.querySelectorAll('input[name="rating"]').forEach((radio, idx) => {
         radio.addEventListener('change', function() {
             const stars = document.querySelectorAll('input[name="rating"] + i');

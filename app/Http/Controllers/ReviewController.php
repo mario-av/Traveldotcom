@@ -153,7 +153,7 @@ class ReviewController extends Controller
             $result = $review->update([
                 'content' => $validated['comment'],
                 'rating' => $validated['rating'],
-                'approved' => false, // Re-require approval after edit
+                'approved' => false, 
             ]);
             $message = 'Review updated successfully.';
         } catch (\Exception $e) {

@@ -3,7 +3,7 @@
 @section('title', 'traveldotcom - Explore Vacation Deals')
 
 @section('modal')
-{{-- Order Modal --}}
+
 <div id="orderModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center">
     <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
         <div class="flex justify-between items-center mb-4">
@@ -33,7 +33,7 @@
     </div>
 </div>
 
-{{-- Filter Modal --}}
+
 <div id="filterModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center">
     <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
         <div class="flex justify-between items-center mb-4">
@@ -94,7 +94,7 @@
 @endsection
 
 @section('content')
-{{-- Hero Section --}}
+
 <section class="relative bg-black py-24 md:py-32 overflow-hidden -mt-[1px]" style="background-image: url('https://images.pexels.com/photos/1144176/pexels-photo-1144176.jpeg?auto=compress&cs=tinysrgb&w=1920'); background-size: cover; background-position: center;">
     <!-- Background Video -->
     <video autoplay muted loop playsinline poster="https://images.pexels.com/photos/1144176/pexels-photo-1144176.jpeg?auto=compress&cs=tinysrgb&w=1920" class="absolute inset-0 w-full h-full object-cover opacity-60">
@@ -111,7 +111,7 @@
             Explore unique homes and experiences near you.
         </p>
 
-        {{-- Search Bar --}}
+        
         <form action="{{ route('main.index') }}" method="get" class="max-w-3xl mx-auto flex bg-white rounded-full p-1.5 shadow-2xl items-center transform hover:scale-[1.01] transition-all duration-300 border border-gray-100">
             @foreach(request()->except(['page','q']) as $key => $value)
             <input type="hidden" name="{{ $key }}" value="{{ $value }}">
@@ -129,7 +129,7 @@
         </form>
     </div>
 
-    {{-- Visual Category Links (Icon Strip) --}}
+    
     <div class="relative mt-12 max-w-5xl mx-auto px-4">
         <div class="flex flex-wrap justify-center gap-6 md:gap-8">
             <a href="{{ route('main.index') }}"
@@ -153,7 +153,7 @@
     </div>
 </section>
 
-{{-- Toolbar Section --}}
+
 <section class="bg-white shadow-sm sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
         <div class="flex items-center justify-between">
@@ -174,14 +174,14 @@
     </div>
 </section>
 
-{{-- Vacation Grid --}}
+
 <section class="py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         @if($vacations->count() > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($vacations as $vacation)
             <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                {{-- Image --}}
+                
                 <div class="h-48 bg-gradient-to-br from-blue-400 to-indigo-500 relative">
                     @if($vacation->photos->count() > 0)
                     @php $mainPhoto = $vacation->photos->first(); @endphp
@@ -205,7 +205,7 @@
                     </span>
                 </div>
 
-                {{-- Content --}}
+                
                 <div class="p-4">
                     <div class="flex items-center text-sm text-gray-500 mb-2">
                         <i class="bi bi-geo-alt me-1"></i>
@@ -230,7 +230,7 @@
             @endforeach
         </div>
 
-        {{-- Pagination --}}
+        
         <div class="mt-8">
             {{ $vacations->appends(request()->query())->onEachSide(2)->links() }}
         </div>

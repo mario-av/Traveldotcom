@@ -5,7 +5,7 @@
 @section('content')
 <div class="py-12 bg-gray-50 min-h-screen" x-data="{ activeTab: '{{ $tab ?? 'overview' }}' }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {{-- Profile Header --}}
+        
         <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden mb-8">
             <div class="h-32 bg-accent opacity-90 transition-colors"></div>
             <div class="px-8 pb-8">
@@ -38,7 +38,7 @@
                     </div>
                 </div>
 
-                {{-- Dashboard Navigation (Tabs) --}}
+                
                 <div class="flex items-center justify-center md:justify-start space-x-8 mt-10 border-b border-gray-100 overflow-x-auto no-scrollbar">
                     <button @click="activeTab = 'overview'"
                         :class="activeTab === 'overview' ? 'border-accent text-accent' : 'border-transparent text-gray-400 hover:text-gray-600'"
@@ -59,11 +59,11 @@
             </div>
         </div>
 
-        {{-- Tab Content --}}
+        
         <div>
-            {{-- Overview Tab --}}
+            
             <div x-show="activeTab === 'overview'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="space-y-8">
-                {{-- Stats Grid --}}
+                
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center space-x-4">
                         <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl shadow-sm">
@@ -94,7 +94,7 @@
                     </div>
                 </div>
 
-                {{-- Bookings Section --}}
+                
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="px-8 py-6 border-b border-gray-50 flex justify-between items-center bg-white">
                         <h2 class="text-xl font-bold text-gray-900">Recent Bookings</h2>
@@ -158,7 +158,7 @@
                 </div>
             </div>
 
-            {{-- Reviews Tab --}}
+            
             <div x-show="activeTab === 'reviews'" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="px-8 py-6 border-b border-gray-50 flex justify-between items-center bg-white">
@@ -208,7 +208,7 @@
                 </div>
             </div>
 
-            {{-- Settings Tab --}}
+            
             <div x-show="activeTab === 'settings'" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden max-w-2xl mx-auto">
                     <div class="px-8 py-6 border-b border-gray-50 bg-white">
@@ -263,7 +263,7 @@
                                 class="w-full bg-gray-50 border-2 border-transparent focus:border-accent focus:bg-white rounded-2xl px-5 py-3 outline-none transition-all duration-200 font-bold text-gray-800">
                             @error('current-password') <p class="text-accent text-xs mt-1 font-bold">{{ $message }}</p> @enderror
                         </div>
-                        {{-- Form grid --}}
+                        
                         <div class="grid grid-cols-1 gap-6">
                             <div>
                                 <label class="block text-xs font-black uppercase tracking-widest text-gray-400 mb-2">Profile Photo</label>

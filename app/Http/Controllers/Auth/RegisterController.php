@@ -49,7 +49,7 @@ class RegisterController extends Controller
                 'rol' => 'user',
             ]);
 
-            // Trigger email verification
+            
             event(new Registered($user));
 
             Auth::login($user);

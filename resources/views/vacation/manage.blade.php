@@ -3,7 +3,7 @@
 @section('title', 'Manage Vacations - Admin')
 
 @section('modal')
-{{-- Delete Modal --}}
+
 <div id="deleteModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center">
     <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
         <div class="text-center">
@@ -30,7 +30,7 @@
 
 <div class="py-4">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {{-- Header --}}
+        
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-2xl font-bold text-gray-800">Manage Vacations</h1>
             <a href="{{ route('vacation.create') }}" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg transition font-semibold shadow-sm">
@@ -38,12 +38,12 @@
             </a>
         </div>
 
-        {{-- Bulk Delete Form --}}
+        
         <form id="form-delete-group" action="{{ route('admin.vacation.delete.group') }}" method="POST">
             @csrf
             @method('DELETE')
 
-            {{-- Toolbar --}}
+            
             <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
                 <div class="flex items-center justify-between">
                     <button type="submit" class="text-red-600 hover:text-red-700 disabled:opacity-50"
@@ -54,7 +54,7 @@
                 </div>
             </div>
 
-            {{-- Table --}}
+            
             <div class="bg-white rounded-xl shadow-md overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full">
@@ -139,13 +139,13 @@
             </div>
         </form>
 
-        {{-- Single Delete Form --}}
+        
         <form id="form-delete" action="" method="POST" class="hidden">
             @csrf
             @method('DELETE')
         </form>
 
-        {{-- Pagination --}}
+        
         <div class="mt-6">
             {{ $vacations->links() }}
         </div>
@@ -155,12 +155,12 @@
 
 @section('scripts')
 <script>
-    // Select all checkbox
+    
     document.getElementById('selectAll').addEventListener('change', function() {
         document.querySelectorAll('.item-checkbox').forEach(cb => cb.checked = this.checked);
     });
 
-    // Delete modal
+    
     function openDeleteModal(title, action) {
         document.getElementById('modal-vacation-name').textContent = title;
         document.getElementById('form-delete').action = action;

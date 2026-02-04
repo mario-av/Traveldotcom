@@ -7,7 +7,7 @@
 
 <div class="py-4">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {{-- Header --}}
+        
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-2xl font-bold text-gray-800">Manage Categories</h1>
             <a href="{{ route('category.create') }}" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg transition font-semibold shadow-sm">
@@ -27,7 +27,7 @@
         </div>
         @enderror
 
-        {{-- Table --}}
+        
         <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
             <div class="overflow-x-auto">
                 <table class="w-full">

@@ -17,7 +17,7 @@
                 @csrf
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {{-- Title --}}
+                    
                     <div class="md:col-span-2">
                         <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
                         <input type="text" id="title" name="title" value="{{ old('title') }}" required
@@ -27,7 +27,7 @@
                         @enderror
                     </div>
 
-                    {{-- Description --}}
+                    
                     <div class="md:col-span-2">
                         <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description *</label>
                         <textarea id="description" name="description" rows="4" required
@@ -37,7 +37,7 @@
                         @enderror
                     </div>
 
-                    {{-- Location --}}
+                    
                     <div>
                         <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location *</label>
                         <input type="text" id="location" name="location" value="{{ old('location') }}" required
@@ -47,7 +47,7 @@
                         @enderror
                     </div>
 
-                    {{-- Category --}}
+                    
                     <div>
                         <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
                         <select id="category_id" name="category_id" required
@@ -64,7 +64,7 @@
                         @enderror
                     </div>
 
-                    {{-- Price --}}
+                    
                     <div>
                         <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price ($) *</label>
                         <input type="number" id="price" name="price" value="{{ old('price') }}" step="0.01" min="0" required
@@ -74,7 +74,7 @@
                         @enderror
                     </div>
 
-                    {{-- Duration --}}
+                    
                     <div>
                         <label for="duration_days" class="block text-sm font-medium text-gray-700 mb-1">Duration (days) *</label>
                         <input type="number" id="duration_days" name="duration_days" value="{{ old('duration_days', 7) }}" min="1" required
@@ -84,7 +84,7 @@
                         @enderror
                     </div>
 
-                    {{-- Start Date --}}
+                    
                     <div>
                         <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">Start Date *</label>
                         <input type="date" id="start_date" name="start_date" value="{{ old('start_date') }}" required
@@ -94,7 +94,7 @@
                         @enderror
                     </div>
 
-                    {{-- Available Slots --}}
+                    
                     <div>
                         <label for="available_slots" class="block text-sm font-medium text-gray-700 mb-1">Available Slots *</label>
                         <input type="number" id="available_slots" name="available_slots" value="{{ old('available_slots', 20) }}" min="0" required
@@ -104,7 +104,7 @@
                         @enderror
                     </div>
 
-                    {{-- Photos --}}
+                    
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Photos</label>
                         <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition">
@@ -120,7 +120,7 @@
                         @enderror
                     </div>
 
-                    {{-- Toggles --}}
+                    
                     <div class="md:col-span-2 flex space-x-8">
                         <label class="flex items-center">
                             <input type="checkbox" name="active" value="1" {{ old('active', true) ? 'checked' : '' }}

@@ -18,7 +18,7 @@
                 @method('PUT')
 
                 <div class="space-y-6">
-                    {{-- Name --}}
+                    
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
                         <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" required
@@ -28,7 +28,7 @@
                         @enderror
                     </div>
 
-                    {{-- Email --}}
+                    
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
                         <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required
@@ -38,7 +38,7 @@
                         @enderror
                     </div>
 
-                    {{-- Role --}}
+                    
                     <div>
                         <label for="rol" class="block text-sm font-medium text-gray-700 mb-1">Role *</label>
                         <select id="rol" name="rol" required
@@ -56,7 +56,7 @@
 
                     <h3 class="text-lg font-semibold text-gray-700">Change Password (optional)</h3>
 
-                    {{-- New Password --}}
+                    
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
                         <input type="password" id="password" name="password"
@@ -67,7 +67,7 @@
                         <p class="text-sm text-gray-500 mt-1">Leave blank to keep current password.</p>
                     </div>
 
-                    {{-- Confirm Password --}}
+                    
                     <div>
                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
                         <input type="password" id="password_confirmation" name="password_confirmation"

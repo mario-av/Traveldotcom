@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create admin user
+        
         $admin = User::factory()->create([
             'name' => 'Admin User',
             'email' => 'admin@travel.com',
@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             'rol' => 'admin',
         ]);
 
-        // Create advanced user
+        
         $advanced = User::factory()->create([
             'name' => 'Advanced User',
             'email' => 'advanced@travel.com',
@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
             'rol' => 'advanced',
         ]);
 
-        // Create regular test user
+        
         $testUser = User::factory()->create([
             'name' => 'Test User',
             'email' => 'user@travel.com',
@@ -47,10 +47,10 @@ class DatabaseSeeder extends Seeder
             'rol' => 'user',
         ]);
 
-        // Create normal users
+        
         $users = User::factory(5)->create();
 
-        // Create categories
+        
         $categories = collect([
             ['name' => 'Beach', 'description' => 'Relaxing beach destinations with sun and sand.'],
             ['name' => 'Mountain', 'description' => 'Adventure in the mountains with hiking and nature.'],
@@ -59,7 +59,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Cultural', 'description' => 'Historical sites and cultural immersion.'],
         ])->map(fn($data) => Category::create($data));
 
-        // Create vacations
+        
         $paris = Vacation::factory()->create([
             'title' => 'Romantic Paris Getaway',
             'description' => 'Experience the magic of Paris with a 5-day trip including a Seine river cruise and Eiffel Tower dinner.',
@@ -127,77 +127,77 @@ class DatabaseSeeder extends Seeder
 
         $vacations = collect([$paris, $tokyo, $cancun, $safari, $alps]);
 
-        // Paris
-        Photo::create(['vacation_id' => $paris->id, 'path' => 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80', 'is_main' => true]); // Paris Tower
-        Photo::create(['vacation_id' => $paris->id, 'path' => 'https://images.unsplash.com/photo-1500318534783-7c87c0245cbd?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); // Paris Street
-        Photo::create(['vacation_id' => $paris->id, 'path' => 'https://images.unsplash.com/photo-1471623320832-752e8bdd164d?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); // Paris Couple
-        Photo::create(['vacation_id' => $paris->id, 'path' => 'https://images.unsplash.com/photo-1522093007474-d86e9bf7ba6f?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); // Paris Cafe
+        
+        Photo::create(['vacation_id' => $paris->id, 'path' => 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80', 'is_main' => true]); 
+        Photo::create(['vacation_id' => $paris->id, 'path' => 'https://images.unsplash.com/photo-1500318534783-7c87c0245cbd?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); 
+        Photo::create(['vacation_id' => $paris->id, 'path' => 'https://images.unsplash.com/photo-1471623320832-752e8bdd164d?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); 
+        Photo::create(['vacation_id' => $paris->id, 'path' => 'https://images.unsplash.com/photo-1522093007474-d86e9bf7ba6f?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); 
 
-        // Tokyo
-        Photo::create(['vacation_id' => $tokyo->id, 'path' => 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=800&q=80', 'is_main' => true]); // Tokyo Neon
-        Photo::create(['vacation_id' => $tokyo->id, 'path' => 'https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); // Tokyo Temple
-        Photo::create(['vacation_id' => $tokyo->id, 'path' => 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); // Tokyo Building
-        Photo::create(['vacation_id' => $tokyo->id, 'path' => 'https://images.unsplash.com/photo-1526481280693-3bfa1367dec0?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); // Tokyo People
+        
+        Photo::create(['vacation_id' => $tokyo->id, 'path' => 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=800&q=80', 'is_main' => true]); 
+        Photo::create(['vacation_id' => $tokyo->id, 'path' => 'https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); 
+        Photo::create(['vacation_id' => $tokyo->id, 'path' => 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); 
+        Photo::create(['vacation_id' => $tokyo->id, 'path' => 'https://images.unsplash.com/photo-1526481280693-3bfa1367dec0?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); 
 
-        // Cancun
-        Photo::create(['vacation_id' => $cancun->id, 'path' => 'https://images.unsplash.com/photo-1544525866-c9545dc46853?auto=format&fit=crop&w=800&q=80', 'is_main' => true]); // Beach
-        Photo::create(['vacation_id' => $cancun->id, 'path' => 'https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); // Pool
-        Photo::create(['vacation_id' => $cancun->id, 'path' => 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); // Ocean
-        Photo::create(['vacation_id' => $cancun->id, 'path' => 'https://images.unsplash.com/photo-1473116763249-56381a355a10?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); // Palm Trees
+        
+        Photo::create(['vacation_id' => $cancun->id, 'path' => 'https://images.unsplash.com/photo-1544525866-c9545dc46853?auto=format&fit=crop&w=800&q=80', 'is_main' => true]); 
+        Photo::create(['vacation_id' => $cancun->id, 'path' => 'https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); 
+        Photo::create(['vacation_id' => $cancun->id, 'path' => 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); 
+        Photo::create(['vacation_id' => $cancun->id, 'path' => 'https://images.unsplash.com/photo-1473116763249-56381a355a10?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); 
 
-        // Safari
-        Photo::create(['vacation_id' => $safari->id, 'path' => 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80', 'is_main' => true]); // Safari
-        Photo::create(['vacation_id' => $safari->id, 'path' => 'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); // Elephant
-        Photo::create(['vacation_id' => $safari->id, 'path' => 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); // Zebras
-        Photo::create(['vacation_id' => $safari->id, 'path' => 'https://images.unsplash.com/photo-1547471080-7541fbe39779?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); // Lion
+        
+        Photo::create(['vacation_id' => $safari->id, 'path' => 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80', 'is_main' => true]); 
+        Photo::create(['vacation_id' => $safari->id, 'path' => 'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); 
+        Photo::create(['vacation_id' => $safari->id, 'path' => 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); 
+        Photo::create(['vacation_id' => $safari->id, 'path' => 'https://images.unsplash.com/photo-1547471080-7541fbe39779?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); 
 
-        // Alps
-        Photo::create(['vacation_id' => $alps->id, 'path' => 'https://images.unsplash.com/photo-1482869359363-233bb977465f?auto=format&fit=crop&w=800&q=80', 'is_main' => true]); // Alps
-        Photo::create(['vacation_id' => $alps->id, 'path' => 'https://images.unsplash.com/photo-1551524316-b86a0767e7c8?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); // Skiing
-        Photo::create(['vacation_id' => $alps->id, 'path' => 'https://images.unsplash.com/photo-1498855926480-d98e83099315?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); // Mountain View
-        Photo::create(['vacation_id' => $alps->id, 'path' => 'https://images.unsplash.com/photo-1465056836041-7f43ac27dcb5?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); // Snow
+        
+        Photo::create(['vacation_id' => $alps->id, 'path' => 'https://images.unsplash.com/photo-1482869359363-233bb977465f?auto=format&fit=crop&w=800&q=80', 'is_main' => true]); 
+        Photo::create(['vacation_id' => $alps->id, 'path' => 'https://images.unsplash.com/photo-1551524316-b86a0767e7c8?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); 
+        Photo::create(['vacation_id' => $alps->id, 'path' => 'https://images.unsplash.com/photo-1498855926480-d98e83099315?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); 
+        Photo::create(['vacation_id' => $alps->id, 'path' => 'https://images.unsplash.com/photo-1465056836041-7f43ac27dcb5?auto=format&fit=crop&w=800&q=80', 'is_main' => false]); 
 
-        // Create random vacations for pagination testing (50 items)
+        
         $randomVacations = Vacation::factory(50)->create([
             'user_id' => $admin->id,
             'category_id' => $categories->random()->id,
         ])->each(function ($vacation) {
-            // Add photos to random vacations via Factory (uses new Unsplash logic)
+            
             Photo::factory()->count(2)->create(['vacation_id' => $vacation->id]);
             Photo::factory()->main()->create(['vacation_id' => $vacation->id]);
         });
 
-        // Merge all vacations
+        
         $vacations = collect([$paris, $tokyo, $cancun, $safari, $alps])->merge($randomVacations);
 
-        // Create bookings
+        
         Booking::factory(30)
             ->recycle($users->merge([$advanced, $testUser]))
             ->recycle($vacations)
             ->create();
 
-        // Create specific bookings for Test User
+        
         Booking::factory()->create([
             'user_id' => $testUser->id,
             'vacation_id' => $paris->id,
-            'created_at' => now()->subDays(10), // Booked 10 days ago
+            'created_at' => now()->subDays(10), 
         ]);
 
         Booking::factory()->create([
             'user_id' => $testUser->id,
             'vacation_id' => $tokyo->id,
-            'created_at' => now()->subDays(2), // Booked 2 days ago
+            'created_at' => now()->subDays(2), 
         ]);
 
-        // Create reviews
+        
         Review::factory(20)
             ->approved()
             ->recycle($users->merge([$advanced, $testUser]))
             ->recycle($vacations)
             ->create();
 
-        // Create specific reviews for Test User
-        // Approved review on Paris
+        
+        
         Review::factory()->create([
             'user_id' => $testUser->id,
             'vacation_id' => $paris->id,
@@ -206,13 +206,13 @@ class DatabaseSeeder extends Seeder
             'approved' => true,
         ]);
 
-        // Pending review on Tokyo (for Admin to approve)
+        
         Review::factory()->create([
             'user_id' => $testUser->id,
             'vacation_id' => $tokyo->id,
             'rating' => 4,
             'content' => 'Tokyo is amazing, but the flight was long. The sushi class was top notch though!',
-            'approved' => false, // Pending approval
+            'approved' => false, 
         ]);
     }
 }

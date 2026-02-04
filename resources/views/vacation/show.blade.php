@@ -3,7 +3,7 @@
 @section('title', $vacation->title . ' - traveldotcom')
 
 @section('content')
-{{-- Hero Image --}}
+
 <section class="relative h-96 bg-gradient-to-br from-blue-600 to-indigo-700">
     @if($vacation->photos->count() > 0)
     @php
@@ -38,15 +38,15 @@
 <section class="py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {{-- Main Content --}}
+            
             <div class="lg:col-span-2 space-y-8">
-                {{-- Description --}}
+                
                 <div class="bg-white rounded-xl shadow-md p-6">
                     <h2 class="text-2xl font-semibold mb-4">About This Vacation</h2>
                     <p class="text-gray-600 leading-relaxed">{{ $vacation->description }}</p>
                 </div>
 
-                {{-- Photo Gallery --}}
+                
                 @if($vacation->photos->count() > 1)
                 <div class="bg-white rounded-xl shadow-md p-6">
                     <h2 class="text-2xl font-semibold mb-4">Photo Gallery</h2>
@@ -60,11 +60,11 @@
                 </div>
                 @endif
 
-                {{-- Reviews --}}
+                
                 <div class="bg-white rounded-xl shadow-md p-6">
                     <h2 class="text-2xl font-semibold mb-4">Reviews</h2>
 
-                    {{-- Pending Reviews (Admin Only) --}}
+                    
                     @if(Auth::check() && Auth::user()->isAdmin() && $vacation->reviews->where('approved', false)->count() > 0)
                     <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
                         <h3 class="text-yellow-800 font-semibold mb-3">
@@ -138,7 +138,7 @@
                             </div>
                             <p class="text-gray-600">{{ $review->content }}</p>
 
-                            {{-- Edit/Delete/History for owner --}}
+                            
                             <div class="mt-2 flex items-center space-x-3 text-sm">
                                 @auth
                                 @if(Auth::user()->id == $review->user_id)
@@ -182,7 +182,7 @@
                     <p class="text-gray-500">No reviews yet. Be the first to review this vacation!</p>
                     @endif
 
-                    {{-- Add Review Form --}}
+                    
                     @auth
                     @if(Auth::user()->hasBookedVacation($vacation->id))
                     <div class="mt-6 pt-6 border-t border-gray-200">
@@ -234,9 +234,9 @@
                 </div>
             </div>
 
-            {{-- Sidebar --}}
+            
             <div class="space-y-6">
-                {{-- Booking Card --}}
+                
                 <div class="bg-white rounded-xl shadow-[0_6px_16px_rgba(0,0,0,0.12)] border border-gray-200 p-6 sticky top-24">
                     <div class="flex justify-between items-end mb-6 border-b border-gray-100 pb-4">
                         <div>

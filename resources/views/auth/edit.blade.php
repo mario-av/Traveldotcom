@@ -18,7 +18,7 @@
                 @method('PUT')
 
                 <div class="space-y-6">
-                    {{-- Name --}}
+                    
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                         <input type="text" id="name" name="name" value="{{ old('name', Auth::user()->name) }}" required
@@ -28,7 +28,7 @@
                         @enderror
                     </div>
 
-                    {{-- Email --}}
+                    
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
                         <input type="email" id="email" name="email" value="{{ old('email', Auth::user()->email) }}" required
@@ -45,7 +45,7 @@
 
                     <h3 class="text-lg font-semibold text-gray-700">Change Password (optional)</h3>
 
-                    {{-- Current Password --}}
+                    
                     <div>
                         <label for="current-password" class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
                         <input type="password" id="current-password" name="current-password"
@@ -55,7 +55,7 @@
                         @enderror
                     </div>
 
-                    {{-- New Password --}}
+                    
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
                         <input type="password" id="password" name="password"
@@ -65,7 +65,7 @@
                         @enderror
                     </div>
 
-                    {{-- Confirm Password --}}
+                    
                     <div>
                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
                         <input type="password" id="password_confirmation" name="password_confirmation"

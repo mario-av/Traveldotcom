@@ -82,13 +82,13 @@ class HomeController extends Controller
 
         $user->name = $request->name;
 
-        // If email changes, require re-verification
+        
         if ($user->email != $request->email) {
             $user->email_verified_at = null;
             $user->email = $request->email;
         }
 
-        // Change password only if provided
+        
         if ($request->password != null) {
             $user->password = Hash::make($request->password);
         }

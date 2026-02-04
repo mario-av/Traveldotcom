@@ -40,7 +40,7 @@ class UserController extends Controller
         try {
             $query = User::query();
 
-            // Search by name or email
+            
             if ($request->filled('search')) {
                 $search = $request->input('search');
                 $query->where(function ($q) use ($search) {
@@ -49,7 +49,7 @@ class UserController extends Controller
                 });
             }
 
-            // Filter by role
+            
             if ($request->filled('role')) {
                 $query->where('rol', $request->input('role'));
             }
@@ -161,7 +161,7 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         try {
-            // Prevent self-deletion
+            
             if ($user->id === auth()->id()) {
                 return redirect()
                     ->back()
@@ -194,7 +194,7 @@ class UserController extends Controller
         ]);
 
         try {
-            // Exclude current user from deletion
+            
             $userIds = array_filter($validated['users'], fn($id) => $id != auth()->id());
 
             User::whereIn('id', $userIds)->delete();
@@ -243,7 +243,7 @@ class UserController extends Controller
         ]);
 
         try {
-            // Prevent changing own role (safety measure)
+            
             if ($user->id === auth()->id() && $validated['rol'] !== 'admin') {
                 return redirect()
                     ->back()

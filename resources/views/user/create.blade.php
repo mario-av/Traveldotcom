@@ -17,7 +17,7 @@
                 @csrf
 
                 <div class="space-y-6">
-                    {{-- Name --}}
+                    
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
                         <input type="text" id="name" name="name" value="{{ old('name') }}" required
@@ -27,7 +27,7 @@
                         @enderror
                     </div>
 
-                    {{-- Email --}}
+                    
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
                         <input type="email" id="email" name="email" value="{{ old('email') }}" required
@@ -37,7 +37,7 @@
                         @enderror
                     </div>
 
-                    {{-- Role --}}
+                    
                     <div>
                         <label for="rol" class="block text-sm font-medium text-gray-700 mb-1">Role *</label>
                         <select id="rol" name="rol" required
@@ -51,7 +51,7 @@
                         @enderror
                     </div>
 
-                    {{-- Password --}}
+                    
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password *</label>
                         <input type="password" id="password" name="password" required
@@ -61,7 +61,7 @@
                         @enderror
                     </div>
 
-                    {{-- Confirm Password --}}
+                    
                     <div>
                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password *</label>
                         <input type="password" id="password_confirmation" name="password_confirmation" required

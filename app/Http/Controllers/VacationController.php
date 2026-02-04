@@ -53,7 +53,7 @@ class VacationController extends Controller
         try {
             $query = Vacation::with(['category', 'user'])->orderBy('created_at', 'desc');
 
-            // Admin sees all, Advanced/Verified sees only their own
+            
             if (!Auth::user()->isAdmin()) {
                 $query->where('user_id', Auth::id());
             }
@@ -103,7 +103,7 @@ class VacationController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // Approval logic: Admin is auto-approved, Advanced requires approval
+        
         if ($user->isAdmin()) {
             $vacation->approved = true;
         } else {
@@ -113,7 +113,7 @@ class VacationController extends Controller
         try {
             $result = $vacation->save();
 
-            // Handle photo uploads
+            
             if ($result && $request->hasFile('photos')) {
                 foreach ($request->file('photos') as $index => $photo) {
                     $path = $photo->store('vacations', 'public');
@@ -212,7 +212,7 @@ class VacationController extends Controller
             /** @var \App\Models\User $user */
             $user = Auth::user();
 
-            // Re-require approval if edited by non-admin
+            
             if (!$user->isAdmin()) {
                 $validated['approved'] = false;
             }

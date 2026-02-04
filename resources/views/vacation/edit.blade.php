@@ -18,7 +18,7 @@
                 @method('PUT')
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {{-- Title --}}
+                    
                     <div class="md:col-span-2">
                         <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
                         <input type="text" id="title" name="title" value="{{ old('title', $vacation->title) }}" required
@@ -28,7 +28,7 @@
                         @enderror
                     </div>
 
-                    {{-- Description --}}
+                    
                     <div class="md:col-span-2">
                         <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description *</label>
                         <textarea id="description" name="description" rows="4" required
@@ -38,7 +38,7 @@
                         @enderror
                     </div>
 
-                    {{-- Location --}}
+                    
                     <div>
                         <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location *</label>
                         <input type="text" id="location" name="location" value="{{ old('location', $vacation->location) }}" required
@@ -48,7 +48,7 @@
                         @enderror
                     </div>
 
-                    {{-- Category --}}
+                    
                     <div>
                         <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
                         <select id="category_id" name="category_id" required
@@ -65,7 +65,7 @@
                         @enderror
                     </div>
 
-                    {{-- Price --}}
+                    
                     <div>
                         <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price ($) *</label>
                         <input type="number" id="price" name="price" value="{{ old('price', $vacation->price) }}" step="0.01" min="0" required
@@ -75,7 +75,7 @@
                         @enderror
                     </div>
 
-                    {{-- Duration --}}
+                    
                     <div>
                         <label for="duration_days" class="block text-sm font-medium text-gray-700 mb-1">Duration (days) *</label>
                         <input type="number" id="duration_days" name="duration_days" value="{{ old('duration_days', $vacation->duration_days) }}" min="1" required
@@ -85,7 +85,7 @@
                         @enderror
                     </div>
 
-                    {{-- Start Date --}}
+                    
                     <div>
                         <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">Start Date *</label>
                         <input type="date" id="start_date" name="start_date" value="{{ old('start_date', $vacation->start_date?->format('Y-m-d')) }}" required
@@ -95,7 +95,7 @@
                         @enderror
                     </div>
 
-                    {{-- Available Slots --}}
+                    
                     <div>
                         <label for="available_slots" class="block text-sm font-medium text-gray-700 mb-1">Available Slots *</label>
                         <input type="number" id="available_slots" name="available_slots" value="{{ old('available_slots', $vacation->available_slots) }}" min="0" required
@@ -105,7 +105,7 @@
                         @enderror
                     </div>
 
-                    {{-- Existing Photos --}}
+                    
                     @if($vacation->photos->count() > 0)
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Current Photos</label>
@@ -114,7 +114,7 @@
                             <div class="photo-container relative group border-2 border-transparent rounded-lg overflow-hidden transition-all duration-300" id="photo-{{ $photo->id }}">
                                 <img src="{{ $photo->url }}" alt="Photo" class="photo-img w-full h-32 object-cover">
 
-                                {{-- Delete Toggle --}}
+                                
                                 <label class="absolute top-2 right-2 cursor-pointer z-10" title="Delete photo">
                                     <input type="checkbox" name="delete_photos[]" value="{{ $photo->id }}"
                                         class="hidden delete-checkbox"
@@ -124,7 +124,7 @@
                                     </div>
                                 </label>
 
-                                {{-- Mark for deletion overlay --}}
+                                
                                 <div class="deletion-overlay absolute inset-0 bg-red-600/20 opacity-0 pointer-events-none transition-opacity flex items-center justify-center">
                                     <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Marked for Deletion</span>
                                 </div>
@@ -137,7 +137,7 @@
                     </div>
                     @endif
 
-                    {{-- New Photos --}}
+                    
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Add New Photos</label>
                         <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition">
@@ -149,7 +149,7 @@
                         </div>
                     </div>
 
-                    {{-- Toggles --}}
+                    
                     <div class="md:col-span-2 flex space-x-8">
                         <label class="flex items-center">
                             <input type="checkbox" name="active" value="1" {{ old('active', $vacation->active) ? 'checked' : '' }}

@@ -23,7 +23,7 @@ class ThemeController extends Controller
         $color = $request->accent_color;
         Session::put('accent_color', $color);
 
-        // Persist to database if user is logged in
+        
         if (Auth::check()) {
             /** @var \App\Models\User $user */
             $user = Auth::user();

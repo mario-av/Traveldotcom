@@ -26,7 +26,7 @@
                 @method('PUT')
 
                 <div class="space-y-6">
-                    {{-- Name --}}
+                    
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name *</label>
                         <input type="text" id="name" name="name" value="{{ old('name', $category->name) }}" required
@@ -36,7 +36,7 @@
                         @enderror
                     </div>
 
-                    {{-- Description --}}
+                    
                     <div>
                         <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
                         <textarea id="description" name="description" rows="4"

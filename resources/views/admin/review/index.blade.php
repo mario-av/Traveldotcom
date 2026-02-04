@@ -18,7 +18,7 @@
         @endif
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            {{-- Desktop Table (hidden on mobile) --}}
+            
             <div class="hidden md:block overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -81,7 +81,7 @@
                 </table>
             </div>
 
-            {{-- Mobile Cards (hidden on desktop) --}}
+            
             <div class="md:hidden divide-y divide-gray-100">
                 @foreach($reviews as $review)
                 <div class="p-4 space-y-3">

@@ -17,23 +17,23 @@ class MainController extends Controller
      */
     public function index(Request $request): View
     {
-        // 1. CLEAN INPUTS
+        
         $field = $this->cleanField($request->field);
         $order = $this->cleanOrder($request->order);
         $q = $request->q;
         $category_id = $request->category_id;
-        $active = true; // Use active field instead of active() method
+        $active = true; 
         $priceMin = $this->cleanNumbers($request->priceMin);
         $priceMax = $this->cleanNumbers($request->priceMax);
 
-        // 2. BASE QUERY
-        // Using with('category') for eager loading
+        
+        
         $query = Vacation::query()->with('category');
 
-        // Show only active vacations (assuming there's an 'active' column as per migration)
+        
         $query->where('active', true);
 
-        // 3. CONDITIONAL FILTERS
+        
         if ($priceMin != null) {
             $query->where('price', '>=', $priceMin);
         }
@@ -44,7 +44,7 @@ class MainController extends Controller
             $query->where('category_id', '=', $category_id);
         }
 
-        // 4. SEARCH (title, description, location, category name)
+        
         if ($q != null) {
             $query->where(function ($sq) use ($q) {
                 $sq->where('title', 'like', '%' . $q . '%')
@@ -56,7 +56,7 @@ class MainController extends Controller
             });
         }
 
-        // 5. SORTING
+        
         if (!$request->has('field')) {
             $query->orderBy('featured', 'desc')
                 ->orderBy('created_at', 'desc')
@@ -66,11 +66,11 @@ class MainController extends Controller
             $query->orderBy($sortingField, $order);
         }
 
-        // 6. PAGINATION
+        
         $vacations = $query->paginate(9)->withQueryString();
 
-        // 7. DATA FOR FILTERS
-        // Pluck returns an array [id => name], using Category model
+        
+        
         $categories = Category::pluck('name', 'id')->all();
 
         return view('main.index', [
@@ -93,7 +93,7 @@ class MainController extends Controller
             'price' => 'price',
             'location' => 'location'
         ];
-        // Default to created_at if key not found (though cleanField should handle valid keys)
+        
         return $array[$orderRequest] ?? 'created_at';
     }
 
@@ -109,7 +109,7 @@ class MainController extends Controller
 
     private function cleanInput($input, array $array): string
     {
-        $value = $array[0]; // Default value
+        $value = $array[0]; 
         if (in_array($input, $array)) {
             $value = $input;
         }
